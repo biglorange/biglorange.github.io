@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.5.0',
+    sidebar: {"b2t":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="通常情况下并不需要独立显卡的性能，只需要有一个集成显卡作为显示输出，同时将独立显卡关闭以省电，但是有时又需要独立显卡的性能来干一些工作，同时自己手动尝试了一下在 nVidia 显卡常开和使用 bumblebee 之间切换是可行的，就将两者之间的切换做成了命令集成，只是很简单的命令集成，没有很高深的脚本化，仅为自用就可以的程度。">
+<meta name="keywords" content="Arch Linux,nvidia,nvidia-primes,bumblebee">
+<meta property="og:type" content="article">
+<meta property="og:title" content="显卡驱动作死（续）显卡控制切换脚本化">
+<meta property="og:url" content="https://biglorange.github.io/2019/05/12/显卡驱动作死（续）显卡控制切换脚本化/index.html">
+<meta property="og:site_name" content="BigOrange Blog">
+<meta property="og:description" content="通常情况下并不需要独立显卡的性能，只需要有一个集成显卡作为显示输出，同时将独立显卡关闭以省电，但是有时又需要独立显卡的性能来干一些工作，同时自己手动尝试了一下在 nVidia 显卡常开和使用 bumblebee 之间切换是可行的，就将两者之间的切换做成了命令集成，只是很简单的命令集成，没有很高深的脚本化，仅为自用就可以的程度。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-12T15:17:11.414Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="显卡驱动作死（续）显卡控制切换脚本化">
+<meta name="twitter:description" content="通常情况下并不需要独立显卡的性能，只需要有一个集成显卡作为显示输出，同时将独立显卡关闭以省电，但是有时又需要独立显卡的性能来干一些工作，同时自己手动尝试了一下在 nVidia 显卡常开和使用 bumblebee 之间切换是可行的，就将两者之间的切换做成了命令集成，只是很简单的命令集成，没有很高深的脚本化，仅为自用就可以的程度。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="BigOrange Blog" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://biglorange.github.io/2019/05/12/显卡驱动作死（续）显卡控制切换脚本化/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>显卡驱动作死（续）显卡控制切换脚本化 | BigOrange Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container  page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BigOrange Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">个人记录</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://biglorange.github.io/2019/05/12/显卡驱动作死（续）显卡控制切换脚本化/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BigOrange">
+      <meta itemprop="description" content="I can do all things.">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BigOrange Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">显卡驱动作死（续）显卡控制切换脚本化
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-05-12 22:09:21 / Modified: 23:17:11" itemprop="dateCreated datePublished" datetime="2019-05-12T22:09:21+08:00">2019-05-12</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/nVidia/" itemprop="url" rel="index"><span itemprop="name">nVidia</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/nVidia/Arch-Linux/" itemprop="url" rel="index"><span itemprop="name">Arch Linux</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">通常情况下并不需要独立显卡的性能，只需要有一个集成显卡作为显示输出，同时将独立显卡关闭以省电，但是有时又需要独立显卡的性能来干一些工作，同时自己手动尝试了一下在 nVidia 显卡常开和使用 bumblebee 之间切换是可行的，就将两者之间的切换做成了命令集成，只是很简单的命令集成，没有很高深的脚本化，仅为自用就可以的程度。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>首先确保直接使用 nVidia 闭源驱动能够正常工作，同时 bumblebee 也是能够正常工作的。</p>
+<p>系统版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">                  -`                    orange@BiGOranGe </span><br><span class="line">                 .o+`                   ---------------- </span><br><span class="line">                `ooo/                   OS: Arch Linux x86_64 </span><br><span class="line">               `+oooo:                  Host: Aspire VN7-591G V1.15 </span><br><span class="line">              `+oooooo:                 Kernel: 5.0.13-arch1-1-ARCH </span><br><span class="line">              -+oooooo+:                Uptime: 2 hours, 4 mins </span><br><span class="line">            `/:-:++oooo+:               Packages: 2054 (pacman) </span><br><span class="line">           `/++++/+++++++:              Shell: zsh 5.7.1 </span><br><span class="line">          `/++++++++++++++:             Resolution: 1920x1080 </span><br><span class="line">         `/+++ooooooooooooo/`           DE: Deepin </span><br><span class="line">        ./ooosssso++osssssso+`          WM: Mutter(DeepinGala) </span><br><span class="line">       .oossssso-````/ossssss+`         Theme: Adapta [GTK2/3] </span><br><span class="line">      -osssssso.      :ssssssso.        Icons: Numix-Circle [GTK2/3] </span><br><span class="line">     :osssssss/        osssso+++.       Terminal: deepin-terminal </span><br><span class="line">    /ossssssss/        +ssssooo/-       Terminal Font: Noto Mono <span class="keyword">for</span> Powerline 12 </span><br><span class="line">  `/ossssso+/:-        -:/+osssso+-     CPU: Intel i5-4210H (4) @ 3.500GHz </span><br><span class="line"> `+sso+:-`                 `.-/+oso:    GPU: Intel 4th Gen Core Processor </span><br><span class="line">`++:.                           `-/+/   GPU: NVIDIA GeForce GTX 860M </span><br><span class="line">.`                                 `/   Memory: 2633MiB / 7898MiB</span><br></pre></td></tr></table></figure>
+<p>nVidia 版本：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Sun May 12 23:14:07 2019       </span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| NVIDIA-SMI 418.74       Driver Version: 418.74       CUDA Version: 10.1     |</span><br><span class="line">|-------------------------------+----------------------+----------------------+</span><br><span class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</span><br><span class="line">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</span><br><span class="line">|===============================+======================+======================|</span><br><span class="line">|   0  GeForce GTX 860M    Off  | 00000000:01:00.0 Off |                  N/A |</span><br><span class="line">| N/A   49C    P0    N/A /  N/A |      5MiB /  2004MiB |      0%      Default |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line">                                                                               </span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| Processes:                                                       GPU Memory |</span><br><span class="line">|  GPU       PID   Type   Process name                             Usage      |</span><br><span class="line">|=============================================================================|</span><br><span class="line">|    0     11362      G   /usr/lib/Xorg                                  4MiB |</span><br><span class="line">+-----------------------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+<h3 id="编写脚本"><a href="#编写脚本" class="headerlink" title="编写脚本"></a>编写脚本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvim /usr/<span class="built_in">local</span>/bin/nvch.sh</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">/usr/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> <span class="keyword">function</span>:change nvidia driver,bumblebee or use nvidia driver directively</span></span><br><span class="line">if [[ $1 == "n" ]]  # use nvidia driver</span><br><span class="line">then</span><br><span class="line">	sudo systemctl disable bumblebeed     # 取消 bumblebee 的开机启动</span><br><span class="line">	echo  | yay -Rnsc bumblebee           # 卸载 bumblebee</span><br><span class="line">	echo "Bumblebee was removed"</span><br><span class="line">	sudo cp /etc/X11/xorg.conf.bak /etc/X11/xorg.conf      # 直接使用 nVidia 驱动需要配置 xorg</span><br><span class="line">	echo "xorg.conf was created"</span><br><span class="line">	sudo cp /home/orange/Software/desktop/nvidia-settings-nvidia.desktop /usr/share/applications/nvidia-settings.desktop   # 这里是直接使用 nVidia 时 nvidia-setting 的打开方式</span><br><span class="line">	echo "desktop file created"</span><br><span class="line">	sudo sed -i 's/^VDPAU_DRIVER=va_gl/VDPAU_DRIVER=nvidia/' /etc/environment	# 环境变量设置 vdpau 为 nVidia</span><br><span class="line">	echo "environment VDPAU_DRIVER now is nvidia"</span><br><span class="line"><span class="meta">	#</span><span class="bash">sed -i <span class="string">'s/^#hw=vdpau/hw=vdpau/'</span> /home/orange/.config/mpv/mpv.conf    <span class="comment"># 设置 mpv 使用 nVidia 显卡硬解码，缓解 CPU 占用率</span></span></span><br><span class="line"><span class="meta">	#</span><span class="bash">sed -i <span class="string">'s/^#profile=gpu-hq/profile=gpu-hq/'</span> /home/orange/.config/mpv/mpv.conf</span></span><br><span class="line">	sed -i 's/^#gpu-api=vulkan/gpu-api=vulkan/' /home/orange/.config/mpv/mpv.conf</span><br><span class="line">	sed -i 's/^#vo=vdpau/vo=vdpau/' /home/orange/.config/mpv/mpv.conf</span><br><span class="line">	echo "mpv.conf now is nVidia"</span><br><span class="line">elif [[ $1 == "b" ]]</span><br><span class="line">then </span><br><span class="line">	echo | yay -S bumblebee primus lib32-primus          # 安装 bumblebee 及 primus</span><br><span class="line">	echo "Bumblebee &amp; primus was installed"</span><br><span class="line">	sudo systemctl enable bumblebeed                     # 开机启动 bumblebee</span><br><span class="line">	echo "Bumblebee.service was enabled"</span><br><span class="line">	sudo mv /etc/X11/xorg.conf /etc/X11/xorg.conf/bak         # bumblebee 会自动管理 xorg，所以将 xorg 配置文件直接备份，以备在切换为直接使用 nVidia 驱动时使用</span><br><span class="line">	echo "xorg.conf was deleted"</span><br><span class="line">	sudo cp /home/orange/Software/desktop/nvidia-settings-bumblebee.desktop /usr/share/applications/nvidia-settings.desktop  # 这里是使用 bumblebee 时 nvidia-setting 的打开方式</span><br><span class="line">	echo "desktop file created"</span><br><span class="line">	sudo sed -i 's/^VDPAU_DRIVER=nvidia/VDPAU_DRIVER=va_gl/g' /etc/environment    # 设置环境变量 vdpau 为 intel 集成显卡	</span><br><span class="line">	echo "environment VDPAU_DRIVER now is #"</span><br><span class="line"><span class="meta">	#</span><span class="bash">sed -i <span class="string">'s/^hw=vdpau/#hw=vdpau/'</span> /home/orange/.config/mpv/mpv.conf        <span class="comment"># 取消 mpv 用 nVidia 解码的方式，否则 mpv 会无法打开</span></span></span><br><span class="line"><span class="meta">	#</span><span class="bash">sed -i <span class="string">'s/^profile=gpu-hq/#profile=gpu-hq/'</span> /home/orange/.config/mpv/mpv.conf</span></span><br><span class="line">	sed -i 's/^gpu-api=vulkan/#gpu-api=vulkan/' /home/orange/.config/mpv/mpv.conf </span><br><span class="line">	sed -i 's/^vo=vdpau/#vo=vdpau/' /home/orange/.config/mpv/mpv.conf</span><br><span class="line">	echo "mpv.conf now is #"</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p>两个不同的 desktop 文件内容：</p>
+<p>nvidia-settings-bumblebee.desktop</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Type=Application</span><br><span class="line">Encoding=UTF-8</span><br><span class="line">Name=NVIDIA X Server Settings Bumblebee</span><br><span class="line">Comment=Configure NVIDIA X Server Settings</span><br><span class="line">Exec=optirun -b none /usr/bin/nvidia-settings -c :8</span><br><span class="line">Icon=/usr/share/pixmaps/nvidia-settings.png</span><br><span class="line">Categories=__NVIDIA_SETTINGS_DESKTOP_CATEGORIES__</span><br><span class="line"></span><br><span class="line"><span class="comment"># Translations provided by Sun Microsystems</span></span><br><span class="line">Name[de]=NVIDIA X-Server-Einstellungen</span><br><span class="line">Name[es]=Valores de configuración del servidor NVIDIA X</span><br><span class="line">Name[fr]=Paramètres du serveur X NVIDIA</span><br><span class="line">Name[it]=NVIDIA X Server Settings</span><br><span class="line">Name[ja]=NVIDIA X サーバー設定</span><br><span class="line">Name[ko]=NVIDIA X 서버 설정</span><br><span class="line">Name[pt_BR]=Configurações <span class="keyword">do</span> NVIDIA X Server</span><br><span class="line">Name[zh_CN]=NVIDIA X 服务器设置</span><br><span class="line">Name[zh_HK]=NVIDIA X 伺服器設定</span><br><span class="line">Name[zh_TW]=NVIDIA X 伺服器設定</span><br><span class="line">Comment[de]=Konfigurieren der NVIDIA X-Server-Einstellungen</span><br><span class="line">Comment[es]=Establezca los valores de configuración del servidor NVIDIA X</span><br><span class="line">Comment[fr]=Configurer les paramètres du serveur X NVIDIA</span><br><span class="line">Comment[it]=Configura NVIDIA X Server Settings</span><br><span class="line">Comment[ja]=NVIDIA X サーバー設定を構成します</span><br><span class="line">Comment[ko]=NVIDIA X 서버 설정 구성</span><br><span class="line">Comment[pt_BR]=Definir &amp;configurações de gerenciamento de usuário...</span><br><span class="line">Comment[zh_CN]=配置 NVIDIA X 服务器设置</span><br><span class="line">Comment[zh_HK]=配置 NVIDIA X 伺服器設定</span><br><span class="line">Comment[zh_TW]=配置 NVIDIA X 伺服器設定</span><br></pre></td></tr></table></figure>
+<p>nvidia-settings-nvidia.desktop</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Categories=__NVIDIA_SETTINGS_DESKTOP_CATEGORIES__</span><br><span class="line">Comment=Configure NVIDIA X Server Settings</span><br><span class="line">Comment[de]=Konfigurieren der NVIDIA X-Server-Einstellungen</span><br><span class="line">Comment[es]=Establezca los valores de configuración del servidor NVIDIA X</span><br><span class="line">Comment[fr]=Configurer les paramètres du serveur X NVIDIA</span><br><span class="line">Comment[it]=Configura NVIDIA X Server Settings</span><br><span class="line">Comment[ja]=NVIDIA X サーバー設定を構成します</span><br><span class="line">Comment[ko]=NVIDIA X 서버 설정 구성</span><br><span class="line">Comment[pt_BR]=Definir &amp;configurações de gerenciamento de usuário...</span><br><span class="line">Comment[zh_CN]=配置 NVIDIA X 服务器设置</span><br><span class="line">Comment[zh_HK]=配置 NVIDIA X 伺服器設定</span><br><span class="line">Comment[zh_TW]=配置 NVIDIA X 伺服器設定</span><br><span class="line">Encoding=UTF-8</span><br><span class="line">Exec=/usr/bin/nvidia-settings</span><br><span class="line">Icon=/usr/share/pixmaps/nvidia-settings.png</span><br><span class="line">Name=NVIDIA X Server Settings Nvidia</span><br><span class="line">Name[de]=NVIDIA X-Server-Einstellungen</span><br><span class="line">Name[es]=Valores de configuración del servidor NVIDIA X</span><br><span class="line">Name[fr]=Paramètres du serveur X NVIDIA</span><br><span class="line">Name[it]=NVIDIA X Server Settings</span><br><span class="line">Name[ja]=NVIDIA X サーバー設定</span><br><span class="line">Name[ko]=NVIDIA X 서버 설정</span><br><span class="line">Name[pt_BR]=Configurações <span class="keyword">do</span> NVIDIA X Server</span><br><span class="line">Name[zh_CN]=NVIDIA X 服务器设置</span><br><span class="line">Name[zh_HK]=NVIDIA X 伺服器設定</span><br><span class="line">Name[zh_TW]=NVIDIA X 伺服器設定</span><br><span class="line">Type=Application</span><br></pre></td></tr></table></figure>
+<p>赋予脚本可执行权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod +x /usr/<span class="built_in">local</span>/bin/nvch.sh</span><br></pre></td></tr></table></figure>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nvch n     <span class="comment"># 切换为直接使用 nVidia 闭源驱动的方式</span></span><br><span class="line">nvch b     <span class="comment"># 切换为使用 bumblebee 的省电方式</span></span><br></pre></td></tr></table></figure>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><p>切换显卡驱动方式之后需要重启才能生效</p>
+<h3 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h3><p>脚本中 mpv 配置那一段是个人需要所配置的，因为 CPU 集显性能在现在看有一点不够用，导致看较大（5GB以上）视频会掉帧，同时整个电脑会卡顿，CPU 被吃满，所以此时需要使用 nVidia 显卡来打开 mpv。在此之前也有尝试过使用 bumblebee 的方式来通过 primusrun 或者 optirun 来给 mpv 加速获取高性能，但因为 mpv 使用的方式无法使用 bumblebee 来资持的，所以就想到了这么一个算是比较难看的办法。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Arch-Linux/" rel="tag"># Arch Linux</a>
+          
+            <a href="/tags/nvidia/" rel="tag"># nvidia</a>
+          
+            <a href="/tags/nvidia-primes/" rel="tag"># nvidia-primes</a>
+          
+            <a href="/tags/bumblebee/" rel="tag"># bumblebee</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/13/不知道第几个脚本/" rel="next" title="不知道第几个脚本">
+                <i class="fa fa-chevron-left"></i> 不知道第几个脚本
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="BigOrange">
+            
+              <p class="site-author-name" itemprop="name">BigOrange</p>
+              <p class="site-description motion-element" itemprop="description">I can do all things.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/biglorange" target="_blank" title="GitHub"><i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编写脚本"><span class="nav-number">2.</span> <span class="nav-text">编写脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用方式"><span class="nav-number">3.</span> <span class="nav-text">使用方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意事项"><span class="nav-number">4.</span> <span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后记"><span class="nav-number">5.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BigOrange</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.5.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+  
+
+
+  
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=6.5.0"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.5.0"></script>
+
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('Copy').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('Copy')
+        }, 300)
+      }).append(e)
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+</body>
+</html>
