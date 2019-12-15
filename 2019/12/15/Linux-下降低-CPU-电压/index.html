@@ -108,18 +108,18 @@
 
 
 
-  <meta name="description" content="桌面无线化，切换无线鼠标达尔优 LM108，双模机械键盘 RK61 Cherry 茶轴">
-<meta name="keywords" content="Arch Linux,bluetooth,keyboard,mouse">
+  <meta name="description" content="Arch Linux 下使用 undervolt 降低 CPU 电压以减小发热">
+<meta name="keywords" content="Arch Linux,CPU">
 <meta property="og:type" content="article">
-<meta property="og:title" content="桌面无线进化 连接蓝牙鼠标和键盘">
-<meta property="og:url" content="https://biglorange.github.io/2019/12/15/桌面无线进化-连接蓝牙鼠标和键盘/index.html">
+<meta property="og:title" content="Linux 下降低 CPU 电压">
+<meta property="og:url" content="https://biglorange.github.io/2019/12/15/Linux-下降低-CPU-电压/index.html">
 <meta property="og:site_name" content="BigOrange Blog">
-<meta property="og:description" content="桌面无线化，切换无线鼠标达尔优 LM108，双模机械键盘 RK61 Cherry 茶轴">
+<meta property="og:description" content="Arch Linux 下使用 undervolt 降低 CPU 电压以减小发热">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-15T07:05:20.018Z">
+<meta property="og:updated_time" content="2019-12-15T07:29:14.601Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="桌面无线进化 连接蓝牙鼠标和键盘">
-<meta name="twitter:description" content="桌面无线化，切换无线鼠标达尔优 LM108，双模机械键盘 RK61 Cherry 茶轴">
+<meta name="twitter:title" content="Linux 下降低 CPU 电压">
+<meta name="twitter:description" content="Arch Linux 下使用 undervolt 降低 CPU 电压以减小发热">
 
 
 
@@ -128,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="https://biglorange.github.io/2019/12/15/桌面无线进化-连接蓝牙鼠标和键盘/">
+  <link rel="canonical" href="https://biglorange.github.io/2019/12/15/Linux-下降低-CPU-电压/">
 
 
 
@@ -138,7 +138,7 @@
   };
 </script>
 
-  <title>桌面无线进化 连接蓝牙鼠标和键盘 | BigOrange Blog</title>
+  <title>Linux 下降低 CPU 电压 | BigOrange Blog</title>
   
 
 
@@ -311,7 +311,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://biglorange.github.io/2019/12/15/桌面无线进化-连接蓝牙鼠标和键盘/">
+    <link itemprop="mainEntityOfPage" href="https://biglorange.github.io/2019/12/15/Linux-下降低-CPU-电压/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="BigOrange">
@@ -328,7 +328,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">桌面无线进化 连接蓝牙鼠标和键盘
+          <h1 class="post-title" itemprop="name headline">Linux 下降低 CPU 电压
               
             
           </h1>
@@ -353,7 +353,7 @@
                 
               
 
-              <time title="Created: 2019-12-15 14:22:31 / Modified: 15:05:20" itemprop="dateCreated datePublished" datetime="2019-12-15T14:22:31+08:00">2019-12-15</time>
+              <time title="Created: 2019-12-15 15:09:29 / Modified: 15:29:14" itemprop="dateCreated datePublished" datetime="2019-12-15T15:09:29+08:00">2019-12-15</time>
             
 
             
@@ -379,13 +379,6 @@
 
                 
                 
-                  , 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Arch-Linux/peripherals/" itemprop="url" rel="index"><span itemprop="name">peripherals</span></a></span>
-
-                
-                
               
             </span>
           
@@ -402,7 +395,7 @@
           
 
           
-              <div class="post-description">桌面无线化，切换无线鼠标达尔优 LM108，双模机械键盘 RK61 Cherry 茶轴</div>
+              <div class="post-description">Arch Linux 下使用 undervolt 降低 CPU 电压以减小发热</div>
           
 
         </div>
@@ -418,44 +411,21 @@
       
 
       
-        <h4 id="鼠标键盘"><a href="#鼠标键盘" class="headerlink" title="鼠标键盘"></a>鼠标键盘</h4><p>键盘：RK 61 Cherry 茶轴 黑色</p>
-<p>鼠标：达尔优 LM108 垂直人体工学鼠标</p>
-<p>软件包： bluetoorhctl</p>
-<h4 id="连接鼠标"><a href="#连接鼠标" class="headerlink" title="连接鼠标"></a>连接鼠标</h4><p>打开鼠标开关</p>
-<p>达尔优 LM108 底面左上角有一个黑色按钮，为蓝牙配对按钮</p>
-<p>长按进入蓝牙配对模式</p>
-<p>电脑上使用 bluetoothctl 进行蓝牙管理</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">Agent registered</span><br><span class="line">[CHG] Controller 60:57:18:1C:C1:8F Pairable: yes</span><br><span class="line"><span class="meta">[bluetooth]#</span><span class="bash"> scan on</span></span><br><span class="line">Discovery started</span><br></pre></td></tr></table></figure>
-<p>当扫描到对应蓝牙设备的 mac 时，使用</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pair &lt;mac-of-mouse&gt;</span><br></pre></td></tr></table></figure>
-<p>进行配对连接</p>
-<p>此时会弹出提示框输入 yes 以确认配对设备</p>
-<p>配对之后输入 connect <mac-of-moouse> 连接鼠标</mac-of-moouse></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">connect &lt;mac-of-mouse&gt;</span><br></pre></td></tr></table></figure>
-<p>至此鼠标连接成功。</p>
-<p>接下来以蓝牙方式连接键盘</p>
-<h4 id="连接键盘"><a href="#连接键盘" class="headerlink" title="连接键盘"></a>连接键盘</h4><p>去 RK 官网查看 RK 61 双模键盘使用方式</p>
-<p>我这里为第一版， Tab 和 P 键上都有镭射标记</p>
-<p>Fn + Tab 为蓝牙有线连接方式切换，出厂默认为蓝牙连接方式</p>
-<p>Fn + P 进入蓝牙配对模式</p>
-<p>首先打开键盘背部开关开启键盘</p>
-<p>出厂默认为蓝牙连接方式，则按下 Fn + P 进入蓝牙配对模式，此时 P 键连续闪烁</p>
-<p>在电脑上进入 bluetoothctl 进行蓝牙配对</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">scan on</span><br><span class="line"><span class="meta">#</span><span class="bash"> 扫描到蓝牙键盘后使用 pair &lt;mac-of-keyboard&gt; 进行配对</span></span><br><span class="line">pair &lt;mac-of-keyboard&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 输入 yes 以确认配对</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 配对成功之后使用 connect &lt;mac-of-keyboard&gt; 进行连接</span></span><br><span class="line">connect &lt;mac-of-keyboard&gt;</span><br></pre></td></tr></table></figure>
-<p>至此键盘和鼠标的连接完成</p>
-<p>接下来进行鼠标延迟的优化</p>
-<h4 id="鼠标延迟优化"><a href="#鼠标延迟优化" class="headerlink" title="鼠标延迟优化"></a>鼠标延迟优化</h4><p>修改鼠标轮询率</p>
-<p>查看蓝牙鼠标 mac 地址</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">Agent registered</span><br><span class="line">[CHG] Controller 60:57:18:1C:C1:8F Pairable: yes</span><br><span class="line">[RK-Bluetooth keyboard]# devices</span><br><span class="line">Device DC:2C:26:D0:08:02 RK-Bluetooth keyboard</span><br><span class="line">Device FA:0C:38:6A:EC:CE LM108 Bluetooth</span><br></pre></td></tr></table></figure>
-<p>查看系统蓝牙适配器 mac 地址</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[RK-Bluetooth keyboard]# list</span><br><span class="line">Controller 60:57:18:1C:C1:8F BiGOranGe [default]</span><br></pre></td></tr></table></figure>
-<p>var 下目录需要超级管理员权限才可以查看修改</p>
-<p>在超级管理员状态下修改 <code>/var/lib/bluetooth/&lt;mac-of-adaptor&gt;/&lt;mac-of-mouse&gt;/info</code>添加/修改以下字段</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ConnectionParameters]</span><br><span class="line">MinInterval=6</span><br><span class="line">MaxInterval=9</span><br><span class="line">Latency=44</span><br><span class="line">Timeout=216</span><br></pre></td></tr></table></figure>
-<p>修改之前的值</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ConnectionParameters]</span><br><span class="line">MinInterval=6</span><br><span class="line">MaxInterval=9</span><br><span class="line">Latency=100</span><br><span class="line">Timeout=600</span><br></pre></td></tr></table></figure>
-<p>可以自己根据自己的需求调节这两个值进行优化，以达到自己满意的状态</p>
-<h4 id="设置蓝牙自动连接"><a href="#设置蓝牙自动连接" class="headerlink" title="设置蓝牙自动连接"></a>设置蓝牙自动连接</h4><p>修改/添加 <code>/etc/bluetooth/main.conf</code>的<code>[Policy]</code>下添加<code>AutoEnable=true</code>将蓝牙设备设置为开机自动连接</p>
+        <h4 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h4><p>python-undervolt</p>
+<h4 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h4><p>sudo undervolt —core -100 —cache -100</p>
+<p>使用方式注意点</p>
+<p>核心和 cache 的电压要降低相同的数值，同时 CPU 会自动设置降压为最接近设定值的数值</p>
+<p>比如我的降压设置为 -85mV，系统自动匹配值为-84.96mV</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">temperature target: -3 (97C)</span><br><span class="line">core: -84.96 mV</span><br><span class="line">gpu: 0.0 mV</span><br><span class="line">cache: -84.96 mV</span><br><span class="line">uncore: 0.0 mV</span><br><span class="line">analogio: 0.0 mV</span><br></pre></td></tr></table></figure>
+<p>降低电压会导致系统不稳定，过低会造成死机，重启后会自动恢复为默认值，当降低的电压可以稳定运行时，可以将其配置为启动时自动生效</p>
+<p>要设置降压一直生效，需要配置对应的自启动任务</p>
+<h4 id="设置降压在系统自启动时生效"><a href="#设置降压在系统自启动时生效" class="headerlink" title="设置降压在系统自启动时生效"></a>设置降压在系统自启动时生效</h4><p>创建 systemd 服务</p>
+<p><code>/etc/systemd/system/undervolt.service</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=undervolt</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=oneshot</span><br><span class="line">ExecStart=/usr/bin/undervolt -v --core -85 --cache -85</span><br></pre></td></tr></table></figure>
+<p>然后创建一个定时器 <code>/etc/systemd/system/undervolt.timer</code> 来周期性触发任务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Apply undervolt settings</span><br><span class="line"></span><br><span class="line">[Timer]</span><br><span class="line">Unit=undervolt.service</span><br><span class="line"><span class="meta">#</span> Wait 2 minutes after boot before first applying</span><br><span class="line">OnBootSec=2min</span><br><span class="line"><span class="meta">#</span> Run every 30 seconds</span><br><span class="line">OnUnitActiveSec=30</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<p>启用定时器和服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable undervolt.timer</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -478,11 +448,7 @@
           
             <a href="/tags/Arch-Linux/" rel="tag"># Arch Linux</a>
           
-            <a href="/tags/bluetooth/" rel="tag"># bluetooth</a>
-          
-            <a href="/tags/keyboard/" rel="tag"># keyboard</a>
-          
-            <a href="/tags/mouse/" rel="tag"># mouse</a>
+            <a href="/tags/CPU/" rel="tag"># CPU</a>
           
         </div>
       
@@ -495,8 +461,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/10/11/PSQL语法/" rel="next" title="PSQL语法">
-                <i class="fa fa-chevron-left"></i> PSQL语法
+              <a href="/2019/12/15/桌面无线进化-连接蓝牙鼠标和键盘/" rel="next" title="桌面无线进化 连接蓝牙鼠标和键盘">
+                <i class="fa fa-chevron-left"></i> 桌面无线进化 连接蓝牙鼠标和键盘
               </a>
             
           </div>
@@ -504,10 +470,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/12/15/Linux-下降低-CPU-电压/" rel="prev" title="Linux 下降低 CPU 电压">
-                Linux 下降低 CPU 电压 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -723,7 +685,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#鼠标键盘"><span class="nav-number">1.</span> <span class="nav-text">鼠标键盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#连接鼠标"><span class="nav-number">2.</span> <span class="nav-text">连接鼠标</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#连接键盘"><span class="nav-number">3.</span> <span class="nav-text">连接键盘</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#鼠标延迟优化"><span class="nav-number">4.</span> <span class="nav-text">鼠标延迟优化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置蓝牙自动连接"><span class="nav-number">5.</span> <span class="nav-text">设置蓝牙自动连接</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#软件"><span class="nav-number">1.</span> <span class="nav-text">软件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用方式"><span class="nav-number">2.</span> <span class="nav-text">使用方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置降压在系统自启动时生效"><span class="nav-number">3.</span> <span class="nav-text">设置降压在系统自启动时生效</span></a></li></ol></div>
             
 
           </div>

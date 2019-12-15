@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://biglorange.github.io/"/>
-  <updated>2019-12-15T07:05:20.018Z</updated>
+  <updated>2019-12-15T07:29:14.601Z</updated>
   <id>https://biglorange.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux 下降低 CPU 电压</title>
+    <link href="https://biglorange.github.io/2019/12/15/Linux-%E4%B8%8B%E9%99%8D%E4%BD%8E-CPU-%E7%94%B5%E5%8E%8B/"/>
+    <id>https://biglorange.github.io/2019/12/15/Linux-下降低-CPU-电压/</id>
+    <published>2019-12-15T07:09:29.000Z</published>
+    <updated>2019-12-15T07:29:14.601Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h4><p>python-undervolt</p><h4 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h4><p>sudo undervolt —core -100 —cache -100</p><p>使用方式注意点</p><p>核心和 cache 的电压要降低相同的数值，同时 CPU 会自动设置降压为最接近设定值的数值</p><p>比如我的降压设置为 -85mV，系统自动匹配值为-84.96mV</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">temperature target: -3 (97C)</span><br><span class="line">core: -84.96 mV</span><br><span class="line">gpu: 0.0 mV</span><br><span class="line">cache: -84.96 mV</span><br><span class="line">uncore: 0.0 mV</span><br><span class="line">analogio: 0.0 mV</span><br></pre></td></tr></table></figure><p>降低电压会导致系统不稳定，过低会造成死机，重启后会自动恢复为默认值，当降低的电压可以稳定运行时，可以将其配置为启动时自动生效</p><p>要设置降压一直生效，需要配置对应的自启动任务</p><h4 id="设置降压在系统自启动时生效"><a href="#设置降压在系统自启动时生效" class="headerlink" title="设置降压在系统自启动时生效"></a>设置降压在系统自启动时生效</h4><p>创建 systemd 服务</p><p><code>/etc/systemd/system/undervolt.service</code></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=undervolt</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=oneshot</span><br><span class="line">ExecStart=/usr/bin/undervolt -v --core -85 --cache -85</span><br></pre></td></tr></table></figure><p>然后创建一个定时器 <code>/etc/systemd/system/undervolt.timer</code> 来周期性触发任务</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Apply undervolt settings</span><br><span class="line"></span><br><span class="line">[Timer]</span><br><span class="line">Unit=undervolt.service</span><br><span class="line"><span class="meta">#</span> Wait 2 minutes after boot before first applying</span><br><span class="line">OnBootSec=2min</span><br><span class="line"><span class="meta">#</span> Run every 30 seconds</span><br><span class="line">OnUnitActiveSec=30</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure><p>启用定时器和服务</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable undervolt.timer</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      Arch Linux 下使用 undervolt 降低 CPU 电压以减小发热
+    
+    </summary>
+    
+      <category term="Arch Linux" scheme="https://biglorange.github.io/categories/Arch-Linux/"/>
+    
+    
+      <category term="Arch Linux" scheme="https://biglorange.github.io/tags/Arch-Linux/"/>
+    
+      <category term="CPU" scheme="https://biglorange.github.io/tags/CPU/"/>
+    
+  </entry>
   
   <entry>
     <title>桌面无线进化 连接蓝牙鼠标和键盘</title>
