@@ -1,7 +1,8 @@
 ---
-title: categories
-date: 2018-10-26 00:35:05
-type: "categories"
+title: Categories
+date: 2018-10-26 00:38:28
+type: “categories”
 comments: false
-​---
+
 ---
+
