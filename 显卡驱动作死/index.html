@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.5.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.5.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.5.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.5.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.5.0',
+    sidebar: {"b2t":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="emmm，本来 bumblebee 使用的挺好的，但是 optirun 游戏性能很捉急，所以冲动之下换成 nvidia-prime 驱动显卡。">
+<meta name="keywords" content="Arch Linux,nvidia,nvidia-primes,bumblebee">
+<meta property="og:type" content="article">
+<meta property="og:title" content="显卡驱动作死">
+<meta property="og:url" content="https://biglorange.github.io/显卡驱动作死/index.html">
+<meta property="og:site_name" content="BigOrange Blog">
+<meta property="og:description" content="emmm，本来 bumblebee 使用的挺好的，但是 optirun 游戏性能很捉急，所以冲动之下换成 nvidia-prime 驱动显卡。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://biglorange.github.io/显卡驱动作死/DeepinScreenshot_TombRaider_20181029194600.png">
+<meta property="og:image" content="https://biglorange.github.io/显卡驱动作死/DeepinScreenshot_TombRaider_20181029194636.png">
+<meta property="og:image" content="https://biglorange.github.io/显卡驱动作死/DeepinScreenshot_TombRaider_20181029194654.png">
+<meta property="og:updated_time" content="2020-08-08T08:20:56.203Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="显卡驱动作死">
+<meta name="twitter:description" content="emmm，本来 bumblebee 使用的挺好的，但是 optirun 游戏性能很捉急，所以冲动之下换成 nvidia-prime 驱动显卡。">
+<meta name="twitter:image" content="https://biglorange.github.io/显卡驱动作死/DeepinScreenshot_TombRaider_20181029194600.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="BigOrange Blog" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://biglorange.github.io/显卡驱动作死/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>显卡驱动作死 | BigOrange Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container  page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">BigOrange Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">个人记录</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://biglorange.github.io/显卡驱动作死/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="BigOrange">
+      <meta itemprop="description" content="I can do all things.">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BigOrange Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">显卡驱动作死
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-10-29 18:14:15" itemprop="dateCreated datePublished" datetime="2018-10-29T18:14:15+08:00">2018-10-29</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-08-08 16:20:56" itemprop="dateModified" datetime="2020-08-08T16:20:56+08:00">2020-08-08</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/nVidia/" itemprop="url" rel="index"><span itemprop="name">nVidia</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/nVidia/Arch-Linux/" itemprop="url" rel="index"><span itemprop="name">Arch Linux</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">emmm，本来 bumblebee 使用的挺好的，但是 optirun 游戏性能很捉急，所以冲动之下换成 nvidia-prime 驱动显卡。</div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>由于是本来就能使用 bumblebee ，所以只是卸载掉 bumblebee 之后安装nvidia-prime。</p>
+<p>系统版本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">                  -`                    orange@BiGOranGe </span><br><span class="line">                 .o+`                   ---------------- </span><br><span class="line">                `ooo/                   OS: Arch Linux x86_64 </span><br><span class="line">               `+oooo:                  Host: Aspire VN7-591G V1.15 </span><br><span class="line">              `+oooooo:                 Kernel: 4.18.16-arch1-1-ARCH </span><br><span class="line">              -+oooooo+:                Uptime: 9 mins </span><br><span class="line">            `/:-:++oooo+:               Packages: 1852 (pacman) </span><br><span class="line">           `/++++/+++++++:              Shell: zsh 5.6.2 </span><br><span class="line">          `/++++++++++++++:             Resolution: 1920x1080 </span><br><span class="line">         `/+++ooooooooooooo/`           DE: Deepin </span><br><span class="line">        ./ooosssso++osssssso+`          WM: Mutter(DeepinGala) </span><br><span class="line">       .oossssso-````/ossssss+`         Theme: Adapta-Nokto [GTK2/3] </span><br><span class="line">      -osssssso.      :ssssssso.        Icons: Numix-Circle [GTK2/3] </span><br><span class="line">     :osssssss/        osssso+++.       Terminal: deepin-terminal </span><br><span class="line">    /ossssssss/        +ssssooo/-       Terminal Font: Noto Mono for Powerline 11 </span><br><span class="line">  `/ossssso+/:-        -:/+osssso+-     CPU: Intel i5-4210H (4) @ 3.500GHz </span><br><span class="line"> `+sso+:-`                 `.-/+oso:    GPU: Intel 4th Gen Core Processor </span><br><span class="line">`++:.                           `-/+/   GPU: NVIDIA GeForce GTX 860M </span><br><span class="line">.`                                 `/   Memory: 2926MiB / 7899MiB</span><br></pre></td></tr></table></figure>
+<p>nvidia 版本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Mon Oct 29 18:37:30 2018       </span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| NVIDIA-SMI 410.66       Driver Version: 410.66       CUDA Version: 10.0     |</span><br><span class="line">|-------------------------------+----------------------+----------------------+</span><br><span class="line">| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |</span><br><span class="line">| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |</span><br><span class="line">|===============================+======================+======================|</span><br><span class="line">|   0  GeForce GTX 860M    Off  | 00000000:01:00.0 Off |                  N/A |</span><br><span class="line">| N/A   49C    P8    N/A /  N/A |    640MiB /  2004MiB |      7%      Default |</span><br><span class="line">+-------------------------------+----------------------+----------------------+</span><br><span class="line">                                                                               </span><br><span class="line">+-----------------------------------------------------------------------------+</span><br><span class="line">| Processes:                                                       GPU Memory |</span><br><span class="line">|  GPU       PID   Type   Process name                             Usage      |</span><br><span class="line">|=============================================================================|</span><br><span class="line">|    0       549      G   /usr/lib/Xorg                                258MiB |</span><br><span class="line">|    0       674      G   deepin-wm                                    216MiB |</span><br><span class="line">|    0      1546      G   ...ge/.local/share/Steam/ubuntu12_32/steam    37MiB |</span><br><span class="line">|    0      1555      G   ./steamwebhelper                               2MiB |</span><br><span class="line">|    0      3683      G   ...uest-channel-token=16256402389774494101    94MiB |</span><br><span class="line">|    0      4595      G   ...-token=D2D86F812F487F5D39D0389BF2F103BD    25MiB |</span><br><span class="line">+-----------------------------------------------------------------------------+</span><br></pre></td></tr></table></figure>
+<p>桌面环境(DDE)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deepin desktop environment</span><br></pre></td></tr></table></figure>
+<p>卸载 bumblebee</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yaourt -Rnsc bumblebee</span><br></pre></td></tr></table></figure>
+<h3 id="安装过程"><a href="#安装过程" class="headerlink" title="安装过程"></a>安装过程</h3><p>如果是全新安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yaourt -S nvidia nvidia-utils xorg-xrandr</span><br></pre></td></tr></table></figure>
+<p>配置 /etc/X11/xorg.conf</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">Section <span class="string">"Module"</span></span><br><span class="line">    Load <span class="string">"modesetting"</span></span><br><span class="line">EndSection</span><br><span class="line">Section <span class="string">"Device"</span></span><br><span class="line">    Identifier <span class="string">"nvidia"</span></span><br><span class="line">    Driver <span class="string">"nvidia"</span></span><br><span class="line">    BusID <span class="string">"PCI:1:0:0"</span>  <span class="comment">#BusID</span></span><br><span class="line">    Option <span class="string">"AllowEmptyInitialConfiguration"</span></span><br><span class="line">    Option <span class="string">"OnDemandVBlankInterrupts"</span> <span class="string">"1"</span></span><br><span class="line">    Option <span class="string">"NoLogo"</span> <span class="string">"1"</span></span><br><span class="line">    Option <span class="string">"RenderAccel"</span> <span class="string">"1"</span></span><br><span class="line">    <span class="comment"># Option "TripleBuffer" "1"</span></span><br><span class="line">    <span class="comment"># 强制Powermizer任何时间都在在特定级别</span></span><br><span class="line">    <span class="comment"># level 0x1=highest</span></span><br><span class="line">    <span class="comment"># level 0x2=med</span></span><br><span class="line">    <span class="comment"># level 0x3=lowest</span></span><br><span class="line">    <span class="comment"># 交流电源设置：</span></span><br><span class="line">    <span class="comment"># Option "RegistryDwords" "PowerMizerLevelAC=0x3"</span></span><br><span class="line">    <span class="comment"># Option "Coolbits" "1"</span></span><br><span class="line">EndSection</span><br><span class="line">Section <span class="string">"Device"</span></span><br><span class="line">    Identifier  <span class="string">"intel"</span></span><br><span class="line">    Driver      <span class="string">"modesetting"</span></span><br><span class="line">    BusID       <span class="string">"PCI:0:2:0"</span></span><br><span class="line">    Option      <span class="string">"AccelMethod"</span>  <span class="string">"sna"</span></span><br><span class="line">    <span class="comment">#Option      "TearFree" "True"</span></span><br><span class="line">    <span class="comment">#Option      "Tiling" "True"</span></span><br><span class="line">    <span class="comment">#Option      "SwapbuffersWait" "True"</span></span><br><span class="line">EndSection</span><br><span class="line">Section <span class="string">"ServerLayout"</span></span><br><span class="line">    Identifier <span class="string">"layout"</span></span><br><span class="line">    <span class="comment">#Screen 1 "nvidia"</span></span><br><span class="line">    Inactive <span class="string">"intel"</span></span><br><span class="line">EndSection</span><br></pre></td></tr></table></figure>
+<p>其中 BusID 必须和 lspci 命令输出相匹配</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lspci | grep 3D</span><br><span class="line">01:00.0 3D controller: NVIDIA Corporation GM107M [GeForce GTX 860M] (rev a2)</span><br></pre></td></tr></table></figure>
+<p>BusID 由 lspci 输出 01:00.00 转换而来，转换结果： 1:0:0</p>
+<p>使用显示管理器 (Display Manager, DM) ，需要编辑启动管理脚本来使用 nvidia 显卡</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/lightdm/display_setup.sh</span><br><span class="line">xrandr --setprovideroutputsource modesetting NVIDIA-0</span><br><span class="line">xrandr --auto</span><br><span class="line">xrandr --dpi 99 <span class="comment">#官方 wiki 参数为 96，个人电脑 96 浏览器字体模糊，修改为 99 个人使用良好</span></span><br></pre></td></tr></table></figure>
+<p>赋予脚本可执行权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod +x /etc/lightdm/display_setup.sh</span><br></pre></td></tr></table></figure>
+<p>编辑 <code>/etc/lightdm/lightdm.conf</code> 的 <code>[Seat:*]</code> 部分以配置 lightdm 运行这个脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/lightdm/lightdm.conf</span><br><span class="line">[Seat:*]</span><br><span class="line">display-setup-script=/etc/lightdm/display_setup.sh</span><br></pre></td></tr></table></figure>
+<p>其他显示管理器修改方式： <a href="https://wiki.archlinux.org/index.php/NVIDIA_Optimus_\(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87\)" target="_blank" rel="noopener">NVIDIA Optimus</a></p>
+<p>重启即可应用。</p>
+<h3 id="性能检验"><a href="#性能检验" class="headerlink" title="性能检验"></a>性能检验</h3><p>古墓丽影 9 帧数提升明显</p>
+<p>使用 bumblebee 时忘记截图了，最低27，最高 40左右，平均在30帧附近</p>
+<p>使用 nvidia-prime ，帧数</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>帧数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>最低</td>
+<td>33</td>
+</tr>
+<tr>
+<td>最高</td>
+<td>68</td>
+</tr>
+<tr>
+<td>平均</td>
+<td>55.1</td>
+</tr>
+</tbody>
+</table>
+<p><img src="DeepinScreenshot_TombRaider_20181029194600.png" alt="DeepinScreenshot_TombRaider_20181029194600"></p>
+<p>画面配置详情</p>
+<p><img src="DeepinScreenshot_TombRaider_20181029194636.png" alt="DeepinScreenshot_TombRaider_20181029194636.png"></p>
+<p><img src="DeepinScreenshot_TombRaider_20181029194654.png" alt="DeepinScreenshot_TombRaider_20181029194654.png"></p>
+<p>系统主要硬件信息</p>
+<table>
+<thead>
+<tr>
+<th>硬件</th>
+<th>型号</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>i5-4210HQ</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>GTX860M</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td>DDR3L 8G</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Arch-Linux/" rel="tag"><i class="fa fa-tag"></i> Arch Linux</a>
+          
+            <a href="/tags/nvidia/" rel="tag"><i class="fa fa-tag"></i> nvidia</a>
+          
+            <a href="/tags/nvidia-primes/" rel="tag"><i class="fa fa-tag"></i> nvidia-primes</a>
+          
+            <a href="/tags/bumblebee/" rel="tag"><i class="fa fa-tag"></i> bumblebee</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/disable_inner_keyboard_when_extkeyboard_plugged/" rel="prev" title="禁用笔记本内置键盘，防止误触">
+                禁用笔记本内置键盘，防止误触 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="BigOrange">
+            
+              <p class="site-author-name" itemprop="name">BigOrange</p>
+              <p class="site-description motion-element" itemprop="description">I can do all things.</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/biglorange" target="_blank" title="GitHub"><i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装过程"><span class="nav-number">2.</span> <span class="nav-text">安装过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#性能检验"><span class="nav-number">3.</span> <span class="nav-text">性能检验</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+        </div>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BigOrange</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.5.0</div>
+
+
+
+
+
+  <script src="https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js"></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize({theme: 'forest'});
+    }
+  </script>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+  
+
+
+  
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=6.5.0"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=6.5.0"></script>
+
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('Copy').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('Copy')
+        }, 300)
+      }).append(e)
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+</body>
+</html>
