@@ -24,7 +24,8 @@ social:
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://biglorange.github.io/
 root: /
-permalink: :year/:month/:day/:title/
+# permalink: :year/:month/:day/:title/
+permalink: :title/
 permalink_defaults:
 
 # Directory
@@ -42,7 +43,7 @@ new_post_name: :title.md # File name of new posts
 default_layout: post
 auto_spacing: true
 titlecase: false # Transform title into titlecase
-external_link.enable: true # Open external links in new tab
+external_link.enable: false # Open external links in new tab
 filename_case: 0
 render_drafts: false
 post_asset_folder: true
@@ -114,6 +115,36 @@ theme_config:
   math: 
     enable: true
     cdn: //cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+
+# sequence:
+#   raphael: https://cdn.bootcss.com/raphael/2.2.8/raphael.min.js
+#   webfont: https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js
+#   snap: https://cdn.bootcss.com/snap.svg/0.5.1/snap.svg-min.js
+#   underscore: https://cdn.bootcss.com/underscore.js/1.9.1/underscore-min.js
+#   sequence: https://cdn.bootcss.com/js-sequence-diagrams/1.0.6/sequence-diagram-min.js
+#   # css: # optional, the url for css, such as hand drawn theme 
+#   options: 
+#     theme: simple
+
+# mermaid chart
+mermaid: ## mermaid url https://github.com/knsv/mermaid
+  enable: true  # default true
+  version: "7.1.2" # default v7.1.2
+  options: 
+
+    
+# Local search
+# Dependencies: https://github.com/theme-next/hexo-generator-searchdb
+# local_search:
+#   enable: true
+#   # if auto, trigger search by changing input
+#   # if manual, trigger search by pressing enter key or search button
+#   trigger: auto
+#   # show top n results per article, show all results by setting to -1
+#   top_n_per_article: 3
+#   # unescape html strings to the readable one
+#   unescape: false
+
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

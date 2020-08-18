@@ -51,13 +51,16 @@ SIP “会话”传输一些简单的经过封包的实时传输协议。RTP 本
 
 注册流程
 
-```sequence
+```mermaid
+sequenceDiagram
 title:SIP 注册流程
+participant 终端代理 A
+participant 代理服务器
 
-终端代理 A --> 代理服务器:REGISTER(1)
-代理服务器 --> 终端代理 A:401(2)
-终端代理 A --> 代理服务器:REGISTER(3)
-代理服务器 --> 终端代理 A:200 OK(4)
+终端代理 A -->> 代理服务器:REGISTER(1)
+代理服务器 -->> 终端代理 A:401(2)
+终端代理 A -->> 代理服务器:REGISTER(3)
+代理服务器 -->> 终端代理 A:200 OK(4)
 ```
 
 1. 用户首次试呼时，终端代理 A 向代理服务器发送 REGISTER 注册请求；
@@ -69,10 +72,14 @@ title:SIP 注册流程
 
 注销流程
 
-```sequence
+```mermaid
+sequenceDiagram
 
-终端代理 --> 代理服务器:REGISTER(1)
-代理服务器 --> 终端代理:200 OK(2)
+participant 终端代理
+participant 代理服务器
+
+终端代理 -->> 代理服务器:REGISTER(1)
+代理服务器 -->> 终端代理:200 OK(2)
 ```
 
 1. 终端向代理服务器发送 REGISTER 消息注销，其中 EXPIRE 字段设置为0；
@@ -80,22 +87,24 @@ title:SIP 注册流程
 
 基本呼叫建立过程
 
-```sequence
+```mermaid
+sequenceDiagram
+
 participant 终端代理 A
 participant 代理服务器
 participant 终端代理 B
-终端代理 A --> 代理服务器: Invite(1)
-代理服务器 --> 终端代理 B: Invite(2)
-代理服务器 --> 终端代理 A: 100 Trying(3)
-终端代理 B --> 代理服务器: 100 Trying(4)
-终端代理 B --> 代理服务器: 180 Ringing(5)
-代理服务器 --> 终端代理 A: 180 Ringing(6)
-终端代理 B --> 代理服务器: 200 OK(7)
-代理服务器 --> 终端代理 A: 200 OK(8)
-终端代理 A --> 代理服务器: ACK(9)
-代理服务器 --> 终端代理 B: ACK(10)
-终端代理 B -- 终端代理 A: 通话(11)
-终端代理 A -- 终端代理 B: 通话(11)
+
+终端代理 A -->> 代理服务器: Invite(1)
+代理服务器 -->> 终端代理 B: Invite(2)
+代理服务器 -->> 终端代理 A: 100 Trying(3)
+终端代理 B -->> 代理服务器: 100 Trying(4)
+终端代理 B -->> 代理服务器: 180 Ringing(5)
+代理服务器 -->> 终端代理 A: 180 Ringing(6)
+终端代理 B -->> 代理服务器: 200 OK(7)
+代理服务器 -->> 终端代理 A: 200 OK(8)
+终端代理 A -->> 代理服务器: ACK(9)
+代理服务器 -->> 终端代理 B: ACK(10)
+终端代理 B --> 终端代理 A: 通话(11)
 ```
 
 1. 用户摘机发起一路呼叫，终端代理 A 向该区域的代理服务器发起 Invite 请求；
@@ -112,16 +121,18 @@ participant 终端代理 B
 
 正常呼叫释放流程
 
-```sequence
+```mermaid
+sequenceDiagram
+
 participant 终端代理 A
 participant 代理服务器
 participant 终端代理 B
 
-终端代理 A --> 终端代理 B: 通话(1)
-终端代理 B --> 代理服务器: Bye(2)
-代理服务器 --> 终端代理 A: Bye(3)
-终端代理 A --> 代理服务器: 200 OK(4)
-代理服务器 --> 终端代理 B: 200 OK(5)
+终端代理 A -->> 终端代理 B: 通话(1)
+终端代理 B -->> 代理服务器: Bye(2)
+代理服务器 -->> 终端代理 A: Bye(3)
+终端代理 A -->> 代理服务器: 200 OK(4)
+代理服务器 -->> 终端代理 B: 200 OK(5)
 ```
 
 1. 正常呼叫
@@ -145,3 +156,6 @@ participant 终端代理 B
 [2]. （SIP协议详解）https://www.cnblogs.com/xiaxveliang/p/12434170.html
 
 [3]. （SIP 协议呼叫流程详解）https://yq.aliyun.com/articles/243203
+
+
+
