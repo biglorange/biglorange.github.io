@@ -1,5 +1,5 @@
 ---
-title: fcitx
+title: 当 fcitx sogou CPU 过高时 kill掉
 date: 2018-10-31 22:31:40
 tags:
  - Arch Linux

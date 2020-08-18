@@ -13,13 +13,13 @@ description:
 
 日常更新代码时，python2-mako 作者的公钥更新了，更新软件时需要 import 作者对应的公钥，但是由于国内的网络环境，无法正常通信，导致无法获取公钥，软件包便无法更新
 
-```shell
+```bash
 gpg: keyserver receive failed: Server indicated a failure
 ```
 
 修改 --keyserver 选项也无法正常工作
 
-```shell
+```bash
 gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 83AF7ACE251C13E6BB7DEFBD330239C1C4DAFEE1
 gpg: keyserver receive failed: Server indicated a failure
 ```
@@ -28,7 +28,7 @@ gpg: keyserver receive failed: Server indicated a failure
 
 寻找一个国内可以正常访问的公钥服务器，例如 ubuntu 的
 
-```shell
+```bash
 https://keyserver.ubuntu.com/
 ```
 
@@ -42,7 +42,7 @@ https://keyserver.ubuntu.com/
 
 2. 复制链接，使用 curl 下载该链接，使用管道 / 存储为文件导入公钥
 
-   ```shell
+   ```bash
    curl https://keyserver.ubuntu.com/pks/lookup\?op\=get\&search\=0x83af7ace251c13e6bb7defbd330239c1c4dafee1 | gpg --import
    ```
 
