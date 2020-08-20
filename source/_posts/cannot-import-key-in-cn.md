@@ -46,7 +46,18 @@ https://keyserver.ubuntu.com/
    curl https://keyserver.ubuntu.com/pks/lookup\?op\=get\&search\=0x83af7ace251c13e6bb7defbd330239c1c4dafee1 | gpg --import
    ```
 
+```bash
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  4694    0  4694    0     0   1755      0 --:--:--  0:00:02 --:--:--  1756
+gpg: key 330239C1C4DAFEE1: 4 signatures not checked due to missing keys
+gpg: key 330239C1C4DAFEE1: public key "Michael Bayer <classic@zzzcomputing.com>" imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+gpg: no ultimately trusted keys found
+```
 
+这里显示 imported: 1 则导入 key 成功。
 
 
 

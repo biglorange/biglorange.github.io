@@ -1,5 +1,5 @@
 ---
-title: 显卡驱动作死
+title: 显卡驱动作死，使用 nvidia-prime 管理显卡
 date: 2018-10-29 18:14:15
 tags: 
   - Arch Linux
