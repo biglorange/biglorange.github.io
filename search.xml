@@ -1,98 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Archlinux 下 gpg import key 无法与服务器通信</title>
-    <url>/cannot-import-key-in-cn/</url>
-    <content><![CDATA[<h3 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h3><p>日常更新代码时，python2-mako 作者的公钥更新了，更新软件时需要 import 作者对应的公钥，但是由于国内的网络环境，无法正常通信，导致无法获取公钥，软件包便无法更新</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gpg: keyserver receive failed: Server indicated a failure</span><br></pre></td></tr></table></figure>
-<p>修改 –keyserver 选项也无法正常工作</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 83AF7ACE251C13E6BB7DEFBD330239C1C4DAFEE1</span><br><span class="line">gpg: keyserver receive failed: Server indicated a failure</span><br></pre></td></tr></table></figure>
-<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>寻找一个国内可以正常访问的公钥服务器，例如 ubuntu 的</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">https://keyserver.ubuntu.com/</span><br></pre></td></tr></table></figure>
-<p>浏览器中打开对应网站，搜索对应公钥（前面需要添加 0x）</p>
-<p>点击搜索结果中第一个 pub rsa2048/83af7ace251c13e6bb7defbd330239c1c4dafee1 这条记录</p>
-<p>会获取到一串公钥，此时有两种方式</p>
-<ol>
-<li><p>拷贝完整内容为文本，然后使用 gpg import filename 导入公钥</p>
-</li>
-<li><p>复制链接，使用 curl 下载该链接，使用管道 / 存储为文件导入公钥</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl https://keyserver.ubuntu.com/pks/lookup\?op\=get\&amp;search\=0x83af7ace251c13e6bb7defbd330239c1c4dafee1 | gpg --import</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>禁用笔记本内置键盘，防止误触</title>
-    <url>/disable_inner_keyboard_when_extkeyboard_plugged/</url>
-    <content><![CDATA[<p>起因</p>
-<p>在 B 站看到一期视频<a href="https://www.bilibili.com/video/av22403776?t=174" target="_blank" rel="noopener">禁用笔记本内置键盘</a>，感觉手动操作还是有一点麻烦，所以写了一个小的 shell 脚本，在 zsh 中设置 alias 别名使用，但还是觉得有一些麻烦，改进了第二版，对是否插着外接键盘进行判断，再进行禁用，第三版目标，实现自动化</p>
-<p>第一版</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#/usr/bin/bash</span></span><br><span class="line">id=$(xinput | grep AT | cut -c53-54)</span><br><span class="line">xinput <span class="built_in">set</span>-prop <span class="variable">$id</span> <span class="string">"Device Enabled"</span> 0</span><br></pre></td></tr></table></figure>
-<p>第二版</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#/usr/bin/bash</span></span><br><span class="line"><span class="comment">#echo $1</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$1</span> == <span class="string">"disable"</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	usbkeyboard=<span class="string">''</span></span><br><span class="line">	usbkeyboard=$(xinput | grep <span class="string">"USB Keyboard"</span> | sed -n <span class="string">'2p'</span>)</span><br><span class="line">	<span class="keyword">if</span> [ -n <span class="string">"<span class="variable">$usbkeyboard</span>"</span> ]</span><br><span class="line">	<span class="keyword">then</span></span><br><span class="line">		<span class="built_in">echo</span> <span class="string">"USB Keyboard Plugged"</span></span><br><span class="line">		id=$(xinput | grep AT | cut -c53-54)</span><br><span class="line">		xinput <span class="built_in">set</span>-prop <span class="variable">$id</span> <span class="string">"Device Enabled"</span> 0</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">"Inner Keyboard disabled"</span></span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="built_in">echo</span> <span class="string">" USB Keyboard NOT Plugged,please check!"</span></span><br><span class="line">	<span class="keyword">fi</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$1</span> == <span class="string">"enable"</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	id=$(xinput | grep AT | cut -c53-54)</span><br><span class="line">	xinput <span class="built_in">set</span>-prop <span class="variable">$id</span> <span class="string">"Device Enabled"</span> 1</span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"Inner Keyboard enabled"</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
-<p>第三版</p>
-<p>使用 udev 规则进行触发脚本</p>
-<h4 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h4><p><a href="https://segmentfault.com/a/1190000011010908" target="_blank" rel="noopener">Linux Udev</a></p>
-<p><a href="https://winddoing.github.io/post/3820.html" target="_blank" rel="noopener">udev 的使用</a></p>
-<p><a href="http://www.xzcblog.com/post-266.html" target="_blank" rel="noopener">通过udev自动检测外置键盘并开启关闭内置键盘</a></p>
-<p><a href="https://harttle.land/2013/10/27/synaptics-settings-linux.html" target="_blank" rel="noopener">外接鼠标禁用触摸板</a></p>
-]]></content>
-      <categories>
-        <category>script</category>
-        <category>shell</category>
-      </categories>
-      <tags>
-        <tag>linux</tag>
-        <tag>script</tag>
-        <tag>shell</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux 下降低 CPU 电压</title>
-    <url>/downgrade_cpu_voltage_on_linux/</url>
-    <content><![CDATA[<h4 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h4><p>python-undervolt</p>
-<h4 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h4><p>sudo undervolt –core -100 –cache -100</p>
-<p>使用方式注意点</p>
-<p>核心和 cache 的电压要降低相同的数值，同时 CPU 会自动设置降压为最接近设定值的数值</p>
-<p>比如我的降压设置为 -85mV，系统自动匹配值为-84.96mV</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">temperature target: -3 (97C)</span><br><span class="line">core: -84.96 mV</span><br><span class="line">gpu: 0.0 mV</span><br><span class="line">cache: -84.96 mV</span><br><span class="line">uncore: 0.0 mV</span><br><span class="line">analogio: 0.0 mV</span><br></pre></td></tr></table></figure>
-<p>降低电压会导致系统不稳定，过低会造成死机，重启后会自动恢复为默认值，当降低的电压可以稳定运行时，可以将其配置为启动时自动生效</p>
-<p>要设置降压一直生效，需要配置对应的自启动任务</p>
-<h4 id="设置降压在系统自启动时生效"><a href="#设置降压在系统自启动时生效" class="headerlink" title="设置降压在系统自启动时生效"></a>设置降压在系统自启动时生效</h4><p>创建 systemd 服务</p>
-<p><code>/etc/systemd/system/undervolt.service</code></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=undervolt</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=oneshot</span><br><span class="line">ExecStart=/usr/bin/undervolt -v --core -85 --cache -85</span><br></pre></td></tr></table></figure>
-<p>然后创建一个定时器 <code>/etc/systemd/system/undervolt.timer</code> 来周期性触发任务</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Apply undervolt settings</span><br><span class="line"></span><br><span class="line">[Timer]</span><br><span class="line">Unit=undervolt.service</span><br><span class="line"><span class="meta">#</span><span class="bash"> Wait 2 minutes after boot before first applying</span></span><br><span class="line">OnBootSec=2min</span><br><span class="line"><span class="meta">#</span><span class="bash"> Run every 30 seconds</span></span><br><span class="line">OnUnitActiveSec=30</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
-<p>启用定时器和服务</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo systemctl enable undervolt.timer</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Arch Linux</category>
-      </categories>
-      <tags>
-        <tag>Arch Linux</tag>
-        <tag>CPU</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>利用Git rebase使提交记录清晰明了</title>
-    <url>/use_rebase_to_make_git_log_clear/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>SIP协议</title>
     <url>/SIP_protocol/</url>
     <content><![CDATA[<p>工作中时常能听到 SIP 协议的名字，但对这个协议始终没有了解，这次便仔细地把这块协议了解一下</p>
 <p>SIP 协议</p>
 <p>SIP（Session Initiation Protocol，会话初始化协议）是由 IETF（Internet EnGineering Task Force，因特网工程任务组）制定的多媒体通信协议，是一个在 IP 网络上进行多媒体通信的应用层控制协议，它被用来创建、修改和中介一个或多个参加者参加的会话进程，与 SDP、TRP/TRCP、DNS 等协议配合，共同完成 IMS 中的会话建立与媒体协商。SIP 协议广泛应用于 CS（Circuit Switched，电路交换）、NGN（Next Generation Network，下一代网络）以及 IMS（IP Mutimedia Subsystem，IP 多媒体子系统）的网络中，可以支持并应用于语音、视频、数据等多媒体业务，同时也可以应用于 Presence（呈现）、Instant Message（即时消息）等特色业务。可以说，有 IP 网络的地方就有 SIP 协议的存在。</p>
 <p>SIP 协议在协议栈中的位置</p>
-<p><img src="./SIP协议/SIP协议在协议栈中的位置_01.bmp" alt=""></p>
+<p><img src="SIP协议在协议栈中的位置_01.bmp" alt=""></p>
 <p>SIP 协议虽然属于应用层协议，然而 SIP 本身不提供任何服务。但是 SIP 是通信的基础，在 SIP 这个通信的基础上可以用来构建不同的服务。SIP 协议在建立和位置多媒体会话中，主要支持如下5个功能：</p>
 <ul>
 <li>检查终端用户的位置。无论被叫放在哪里均能确保呼叫达到被叫放，进行任何描述信息到定位信息的转换；</li>
@@ -213,73 +128,145 @@ participant 终端代理 B
       </tags>
   </entry>
   <entry>
-    <title>命令行设置触摸板轻触为点击</title>
-    <url>/%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%AE%BE%E7%BD%AE%E8%A7%A6%E6%91%B8%E6%9D%BF%E8%BD%BB%E8%A7%A6%E4%B8%BA%E7%82%B9%E5%87%BB/</url>
-    <content><![CDATA[<p>xinput list-props<br>显示所有 xinput 设备<br>xinput list-props <device-id><br>显示设备下的属性<br>xinput set-props 12 313 1<br>设置 <device-id> 下 313 属性 开启 即 触摸板下轻点开启</device-id></device-id></p>
+    <title>Fail2ban 在服务器上的配置</title>
+    <url>/Fail2ban/</url>
+    <content><![CDATA[<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>安装 fail2ban mailx sendmail</p>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>配置 fail2ban jail 部分</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/fail2ban/jail/<span class="built_in">local</span></span><br><span class="line">DEFAULT]</span><br><span class="line"><span class="comment"># 以空格分隔的列表，可以是 IP 地址、CIDR 前缀或者 DNS 主机名</span></span><br><span class="line"><span class="comment"># 用于指定哪些地址可以忽略 fail2ban 防御</span></span><br><span class="line">ignoreip = 127.0.0.1 172.31.0.0/24 10.10.0.0/24 192.168.0.0/24</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 客户端主机被禁止的时长（秒）</span></span><br><span class="line">bantime = 864000</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 客户端主机被禁止前允许失败的次数 </span></span><br><span class="line">maxretry = 3</span><br><span class="line"> </span><br><span class="line"><span class="comment"># 查找失败次数的时长（秒）</span></span><br><span class="line">findtime = 600</span><br><span class="line"> </span><br><span class="line">mta = mailx</span><br><span class="line"></span><br><span class="line">destemail=orange804072060@gmail.com</span><br><span class="line"><span class="comment">#sendmail-whois[name=SSH, dest=orange804072060@gmail.com, sender=orange804072060@163.com]</span></span><br><span class="line"> </span><br><span class="line">[ssh-iptables]</span><br><span class="line">enabled = <span class="literal">true</span></span><br><span class="line">filter = sshd</span><br><span class="line">action = iptables[name=SSH, port=10881, protocol=tcp]</span><br><span class="line">	 mail-whois[name=SSH, dest=orange804072060@gmail.com]</span><br><span class="line"><span class="comment"># sendmail-whois[name=SSH, dest=your@email.com, sender=fail2ban@email.com]</span></span><br><span class="line"><span class="comment"># Debian 系的发行版 </span></span><br><span class="line"><span class="comment"># logpath = /var/log/auth.log</span></span><br><span class="line"><span class="comment"># Red Hat 系的发行版</span></span><br><span class="line">logpath = /var/<span class="built_in">log</span>/secure</span><br><span class="line"><span class="comment"># ssh 服务的最大尝试次数 </span></span><br><span class="line">maxretry = 3</span><br></pre></td></tr></table></figure>
+<p>配置邮件服务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/mail.rc</span><br><span class="line"><span class="built_in">set</span> from=username@domain.com</span><br><span class="line"><span class="built_in">set</span> smtp=smtp.163.com</span><br><span class="line"><span class="built_in">set</span> smtp-auth-user=username@domain.com</span><br><span class="line"><span class="built_in">set</span> smtp-auth-password=passwd</span><br><span class="line"><span class="built_in">set</span> smtp-use-starttls</span><br><span class="line"><span class="built_in">set</span> smtp-auth=login</span><br><span class="line"><span class="built_in">set</span> ssl-verify=ignore</span><br><span class="line"><span class="built_in">set</span> nss-config-dir=/home/orange/</span><br></pre></td></tr></table></figure>
+<p>开放 tcp 25端口 / 465  端口</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/fail2ban/fail2ban.git</span><br><span class="line"><span class="comment">## 下载源码，复制 mail-whois.conf 文件</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">复制 mail-whois.conf 到  /etc/fail2ban/action.d/mail-whois.conf</span><br></pre></td></tr></table></figure>
+<p>修改 mail-whois.conf</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/fail2ban/action.d/mail-whois.conf</span><br><span class="line"><span class="comment"># mail 全部替换为 mailx 所在的绝对路径</span></span><br><span class="line"><span class="comment"># Fail2Ban configuration file</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Author: Cyril Jaquier</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line">[INCLUDES]</span><br><span class="line"></span><br><span class="line">before = mail-whois-common.conf</span><br><span class="line"></span><br><span class="line">[Definition]</span><br><span class="line"></span><br><span class="line"><span class="comment"># bypass ban/unban for restored tickets</span></span><br><span class="line">norestored = 1</span><br><span class="line"></span><br><span class="line"><span class="comment"># Option:  actionstart</span></span><br><span class="line"><span class="comment"># Notes.:  command executed on demand at the first ban (or at the start of Fail2Ban if actionstart_on_demand is set to false).</span></span><br><span class="line"><span class="comment"># Values:  CMD</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">actionstart = <span class="built_in">printf</span> %%b <span class="string">"Hi,\n</span></span><br><span class="line"><span class="string">              The jail &lt;name&gt; has been started successfully.\n</span></span><br><span class="line"><span class="string">              Regards,\n</span></span><br><span class="line"><span class="string">              Fail2Ban"</span>|/usr/bin/mailx -s <span class="string">"[Fail2Ban] &lt;name&gt;: started on &lt;fq-hostname&gt;"</span> &lt;dest&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Option:  actionstop</span></span><br><span class="line"><span class="comment"># Notes.:  command executed at the stop of jail (or at the end of Fail2Ban)</span></span><br><span class="line"><span class="comment"># Values:  CMD</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">actionstop = <span class="built_in">printf</span> %%b <span class="string">"Hi,\n</span></span><br><span class="line"><span class="string">             The jail &lt;name&gt; has been stopped.\n</span></span><br><span class="line"><span class="string">             Regards,\n</span></span><br><span class="line"><span class="string">             Fail2Ban"</span>|/usr/bin/mailx -s <span class="string">"[Fail2Ban] &lt;name&gt;: stopped on &lt;fq-hostname&gt;"</span> &lt;dest&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Option:  actioncheck</span></span><br><span class="line"><span class="comment"># Notes.:  command executed once before each actionban command</span></span><br><span class="line"><span class="comment"># Values:  CMD</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">actioncheck = </span><br><span class="line"></span><br><span class="line"><span class="comment"># Option:  actionban</span></span><br><span class="line"><span class="comment"># Notes.:  command executed when banning an IP. Take care that the</span></span><br><span class="line"><span class="comment">#          command is executed with Fail2Ban user rights.</span></span><br><span class="line"><span class="comment"># Tags:    See jail.conf(5) man page</span></span><br><span class="line"><span class="comment"># Values:  CMD</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">actionban = <span class="built_in">printf</span> %%b <span class="string">"Hi,\n</span></span><br><span class="line"><span class="string">            The IP &lt;ip&gt; has just been banned by Fail2Ban after</span></span><br><span class="line"><span class="string">            &lt;failures&gt; attempts against &lt;name&gt;.\n\n</span></span><br><span class="line"><span class="string">            Here is more information about &lt;ip&gt; :\n</span></span><br><span class="line"><span class="string">            `%(_whois_command)s`\n</span></span><br><span class="line"><span class="string">            Regards,\n</span></span><br><span class="line"><span class="string">            Fail2Ban"</span>|/usr/bin/mailx -s <span class="string">"[Fail2Ban] &lt;name&gt;: banned &lt;ip&gt; from &lt;fq-hostname&gt;"</span> &lt;dest&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># Option:  actionunban</span></span><br><span class="line"><span class="comment"># Notes.:  command executed when unbanning an IP. Take care that the</span></span><br><span class="line"><span class="comment">#          command is executed with Fail2Ban user rights.</span></span><br><span class="line"><span class="comment"># Tags:    See jail.conf(5) man page</span></span><br><span class="line"><span class="comment"># Values:  CMD</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">actionunban = </span><br><span class="line"></span><br><span class="line">[Init]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Default name of the chain</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">name = default</span><br><span class="line"></span><br><span class="line"><span class="comment"># Destination/Addressee of the mail</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line">dest = root</span><br></pre></td></tr></table></figure>
+<p>应用 fail2ban  服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo systemctl enable fail2ban</span><br><span class="line">sudo systemctl start fail2ban</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
-        <category>-- Archlinux</category>
+        <category>fail2ban</category>
       </categories>
       <tags>
-        <tag>-- Archlinux</tag>
+        <tag>fail2ban</tag>
+        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
-    <title>桌面无线进化 连接蓝牙鼠标和键盘</title>
-    <url>/%E6%A1%8C%E9%9D%A2%E6%97%A0%E7%BA%BF%E8%BF%9B%E5%8C%96-%E8%BF%9E%E6%8E%A5%E8%93%9D%E7%89%99%E9%BC%A0%E6%A0%87%E5%92%8C%E9%94%AE%E7%9B%98/</url>
-    <content><![CDATA[<h4 id="鼠标键盘"><a href="#鼠标键盘" class="headerlink" title="鼠标键盘"></a>鼠标键盘</h4><p>键盘：RK 61 Cherry 茶轴 黑色</p>
-<p>鼠标：达尔优 LM108 垂直人体工学鼠标</p>
-<p>软件包： bluetoorhctl</p>
-<h4 id="连接鼠标"><a href="#连接鼠标" class="headerlink" title="连接鼠标"></a>连接鼠标</h4><p>打开鼠标开关</p>
-<p>达尔优 LM108 底面左上角有一个黑色按钮，为蓝牙配对按钮</p>
-<p>长按进入蓝牙配对模式</p>
-<p>电脑上使用 bluetoothctl 进行蓝牙管理</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">Agent registered</span><br><span class="line">[CHG] Controller 60:57:18:1C:C1:8F Pairable: yes</span><br><span class="line"><span class="meta">[bluetooth]#</span><span class="bash"> scan on</span></span><br><span class="line">Discovery started</span><br></pre></td></tr></table></figure>
-<p>当扫描到对应蓝牙设备的 mac 时，使用</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pair &lt;mac-of-mouse&gt;</span><br></pre></td></tr></table></figure>
-<p>进行配对连接</p>
-<p>此时会弹出提示框输入 yes 以确认配对设备</p>
-<p>配对之后输入 connect <mac-of-moouse> 连接鼠标</mac-of-moouse></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">connect &lt;mac-of-mouse&gt;</span><br></pre></td></tr></table></figure>
-<p>至此鼠标连接成功。</p>
-<p>接下来以蓝牙方式连接键盘</p>
-<h4 id="连接键盘"><a href="#连接键盘" class="headerlink" title="连接键盘"></a>连接键盘</h4><p>去 RK 官网查看 RK 61 双模键盘使用方式</p>
-<p>我这里为第一版， Tab 和 P 键上都有镭射标记</p>
-<p>Fn + Tab 为蓝牙有线连接方式切换，出厂默认为蓝牙连接方式</p>
-<p>Fn + P 进入蓝牙配对模式</p>
-<p>首先打开键盘背部开关开启键盘</p>
-<p>出厂默认为蓝牙连接方式，则按下 Fn + P 进入蓝牙配对模式，此时 P 键连续闪烁</p>
-<p>在电脑上进入 bluetoothctl 进行蓝牙配对</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">scan on</span><br><span class="line"><span class="meta">#</span><span class="bash"> 扫描到蓝牙键盘后使用 pair &lt;mac-of-keyboard&gt; 进行配对</span></span><br><span class="line">pair &lt;mac-of-keyboard&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 输入 yes 以确认配对</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 配对成功之后使用 connect &lt;mac-of-keyboard&gt; 进行连接</span></span><br><span class="line">connect &lt;mac-of-keyboard&gt;</span><br></pre></td></tr></table></figure>
-<p>至此键盘和鼠标的连接完成</p>
-<p>接下来进行鼠标延迟的优化</p>
-<h4 id="鼠标延迟优化"><a href="#鼠标延迟优化" class="headerlink" title="鼠标延迟优化"></a>鼠标延迟优化</h4><p>修改鼠标轮询率</p>
-<p>查看蓝牙鼠标 mac 地址</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">Agent registered</span><br><span class="line">[CHG] Controller 60:57:18:1C:C1:8F Pairable: yes</span><br><span class="line">[RK-Bluetooth keyboard]# devices</span><br><span class="line">Device DC:2C:26:D0:08:02 RK-Bluetooth keyboard</span><br><span class="line">Device FA:0C:38:6A:EC:CE LM108 Bluetooth</span><br></pre></td></tr></table></figure>
-<p>查看系统蓝牙适配器 mac 地址</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[RK-Bluetooth keyboard]# list</span><br><span class="line">Controller 60:57:18:1C:C1:8F BiGOranGe [default]</span><br></pre></td></tr></table></figure>
-<p>var 下目录需要超级管理员权限才可以查看修改</p>
-<p>在超级管理员状态下修改 <code>/var/lib/bluetooth/&lt;mac-of-adaptor&gt;/&lt;mac-of-mouse&gt;/info</code>添加/修改以下字段</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ConnectionParameters]</span><br><span class="line">MinInterval=6</span><br><span class="line">MaxInterval=9</span><br><span class="line">Latency=44</span><br><span class="line">Timeout=216</span><br></pre></td></tr></table></figure>
-<p>修改之前的值</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ConnectionParameters]</span><br><span class="line">MinInterval=6</span><br><span class="line">MaxInterval=9</span><br><span class="line">Latency=100</span><br><span class="line">Timeout=600</span><br></pre></td></tr></table></figure>
-<p>可以自己根据自己的需求调节这两个值进行优化，以达到自己满意的状态</p>
-<h4 id="设置蓝牙自动连接"><a href="#设置蓝牙自动连接" class="headerlink" title="设置蓝牙自动连接"></a>设置蓝牙自动连接</h4><p>修改/添加 <code>/etc/bluetooth/main.conf</code>的<code>[Policy]</code>下添加<code>AutoEnable=true</code>将蓝牙设备设置为开机自动连接</p>
+    <title>Archlinux 下 gpg import key 无法与服务器通信</title>
+    <url>/cannot-import-key-in-cn/</url>
+    <content><![CDATA[<h3 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h3><p>日常更新代码时，python2-mako 作者的公钥更新了，更新软件时需要 import 作者对应的公钥，但是由于国内的网络环境，无法正常通信，导致无法获取公钥，软件包便无法更新</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gpg: keyserver receive failed: Server indicated a failure</span><br></pre></td></tr></table></figure>
+<p>修改 –keyserver 选项也无法正常工作</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 83AF7ACE251C13E6BB7DEFBD330239C1C4DAFEE1</span><br><span class="line">gpg: keyserver receive failed: Server indicated a failure</span><br></pre></td></tr></table></figure>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>寻找一个国内可以正常访问的公钥服务器，例如 ubuntu 的</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">https://keyserver.ubuntu.com/</span><br></pre></td></tr></table></figure>
+<p>浏览器中打开对应网站，搜索对应公钥（前面需要添加 0x）</p>
+<p>点击搜索结果中第一个 pub rsa2048/83af7ace251c13e6bb7defbd330239c1c4dafee1 这条记录</p>
+<p>会获取到一串公钥，此时有两种方式</p>
+<ol>
+<li><p>拷贝完整内容为文本，然后使用 gpg import filename 导入公钥</p>
+</li>
+<li><p>复制链接，使用 curl 下载该链接，使用管道 / 存储为文件导入公钥</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl https://keyserver.ubuntu.com/pks/lookup\?op\=get\&amp;search\=0x83af7ace251c13e6bb7defbd330239c1c4dafee1 | gpg --import</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">100  4694    0  4694    0     0   1755      0 --:--:--  0:00:02 --:--:--  1756</span><br><span class="line">gpg: key 330239C1C4DAFEE1: 4 signatures not checked due to missing keys</span><br><span class="line">gpg: key 330239C1C4DAFEE1: public key <span class="string">"Michael Bayer &lt;classic@zzzcomputing.com&gt;"</span> imported</span><br><span class="line">gpg: Total number processed: 1</span><br><span class="line">gpg:               imported: 1</span><br><span class="line">gpg: no ultimately trusted keys found</span><br></pre></td></tr></table></figure>
+<p>这里显示 imported: 1 则导入 key 成功。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>禁用笔记本内置键盘，防止误触</title>
+    <url>/disable_inner_keyboard_when_extkeyboard_plugged/</url>
+    <content><![CDATA[<p>起因</p>
+<p>在 B 站看到一期视频<a href="https://www.bilibili.com/video/av22403776?t=174" target="_blank" rel="noopener">禁用笔记本内置键盘</a>，感觉手动操作还是有一点麻烦，所以写了一个小的 shell 脚本，在 zsh 中设置 alias 别名使用，但还是觉得有一些麻烦，改进了第二版，对是否插着外接键盘进行判断，再进行禁用，第三版目标，实现自动化</p>
+<p>第一版</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#/usr/bin/bash</span></span><br><span class="line">id=$(xinput | grep AT | cut -c53-54)</span><br><span class="line">xinput <span class="built_in">set</span>-prop <span class="variable">$id</span> <span class="string">"Device Enabled"</span> 0</span><br></pre></td></tr></table></figure>
+<p>第二版</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#/usr/bin/bash</span></span><br><span class="line"><span class="comment">#echo $1</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$1</span> == <span class="string">"disable"</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	usbkeyboard=<span class="string">''</span></span><br><span class="line">	usbkeyboard=$(xinput | grep <span class="string">"USB Keyboard"</span> | sed -n <span class="string">'2p'</span>)</span><br><span class="line">	<span class="keyword">if</span> [ -n <span class="string">"<span class="variable">$usbkeyboard</span>"</span> ]</span><br><span class="line">	<span class="keyword">then</span></span><br><span class="line">		<span class="built_in">echo</span> <span class="string">"USB Keyboard Plugged"</span></span><br><span class="line">		id=$(xinput | grep AT | cut -c53-54)</span><br><span class="line">		xinput <span class="built_in">set</span>-prop <span class="variable">$id</span> <span class="string">"Device Enabled"</span> 0</span><br><span class="line">		<span class="built_in">echo</span> <span class="string">"Inner Keyboard disabled"</span></span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="built_in">echo</span> <span class="string">" USB Keyboard NOT Plugged,please check!"</span></span><br><span class="line">	<span class="keyword">fi</span></span><br><span class="line"><span class="keyword">elif</span> [ <span class="variable">$1</span> == <span class="string">"enable"</span> ]</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">	id=$(xinput | grep AT | cut -c53-54)</span><br><span class="line">	xinput <span class="built_in">set</span>-prop <span class="variable">$id</span> <span class="string">"Device Enabled"</span> 1</span><br><span class="line">	<span class="built_in">echo</span> <span class="string">"Inner Keyboard enabled"</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>第三版</p>
+<p>使用 udev 规则进行触发脚本</p>
+<h4 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h4><p><a href="https://segmentfault.com/a/1190000011010908" target="_blank" rel="noopener">Linux Udev</a></p>
+<p><a href="https://winddoing.github.io/post/3820.html" target="_blank" rel="noopener">udev 的使用</a></p>
+<p><a href="http://www.xzcblog.com/post-266.html" target="_blank" rel="noopener">通过udev自动检测外置键盘并开启关闭内置键盘</a></p>
+<p><a href="https://harttle.land/2013/10/27/synaptics-settings-linux.html" target="_blank" rel="noopener">外接鼠标禁用触摸板</a></p>
+]]></content>
+      <categories>
+        <category>script</category>
+        <category>shell</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>script</tag>
+        <tag>shell</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux 下降低 CPU 电压</title>
+    <url>/downgrade_cpu_voltage_on_linux/</url>
+    <content><![CDATA[<h4 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h4><p>python-undervolt</p>
+<h4 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h4><p>sudo undervolt –core -100 –cache -100</p>
+<p>使用方式注意点</p>
+<p>核心和 cache 的电压要降低相同的数值，同时 CPU 会自动设置降压为最接近设定值的数值</p>
+<p>比如我的降压设置为 -85mV，系统自动匹配值为-84.96mV</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">temperature target: -3 (97C)</span><br><span class="line">core: -84.96 mV</span><br><span class="line">gpu: 0.0 mV</span><br><span class="line">cache: -84.96 mV</span><br><span class="line">uncore: 0.0 mV</span><br><span class="line">analogio: 0.0 mV</span><br></pre></td></tr></table></figure>
+<p>降低电压会导致系统不稳定，过低会造成死机，重启后会自动恢复为默认值，当降低的电压可以稳定运行时，可以将其配置为启动时自动生效</p>
+<p>要设置降压一直生效，需要配置对应的自启动任务</p>
+<h4 id="设置降压在系统自启动时生效"><a href="#设置降压在系统自启动时生效" class="headerlink" title="设置降压在系统自启动时生效"></a>设置降压在系统自启动时生效</h4><p>创建 systemd 服务</p>
+<p><code>/etc/systemd/system/undervolt.service</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=undervolt</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=oneshot</span><br><span class="line">ExecStart=/usr/bin/undervolt -v --core -85 --cache -85</span><br></pre></td></tr></table></figure>
+<p>然后创建一个定时器 <code>/etc/systemd/system/undervolt.timer</code> 来周期性触发任务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Apply undervolt settings</span><br><span class="line"></span><br><span class="line">[Timer]</span><br><span class="line">Unit=undervolt.service</span><br><span class="line"><span class="meta">#</span><span class="bash"> Wait 2 minutes after boot before first applying</span></span><br><span class="line">OnBootSec=2min</span><br><span class="line"><span class="meta">#</span><span class="bash"> Run every 30 seconds</span></span><br><span class="line">OnUnitActiveSec=30</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
+<p>启用定时器和服务</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo systemctl enable undervolt.timer</span><br></pre></td></tr></table></figure>
 ]]></content>
       <categories>
         <category>Arch Linux</category>
-        <category>peripherals</category>
       </categories>
       <tags>
         <tag>Arch Linux</tag>
-        <tag>bluetooth</tag>
-        <tag>keyboard</tag>
-        <tag>mouse</tag>
+        <tag>CPU</tag>
       </tags>
   </entry>
   <entry>
-    <title>显卡驱动作死</title>
-    <url>/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E4%BD%9C%E6%AD%BB/</url>
+    <title>命令行设置触摸板轻触为点击</title>
+    <url>/%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%AE%BE%E7%BD%AE%E8%A7%A6%E6%91%B8%E6%9D%BF%E8%BD%BB%E8%A7%A6%E4%B8%BA%E7%82%B9%E5%87%BB/</url>
+    <content><![CDATA[<h3 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h3><p>在 Linux 下使用触摸板的时候总是需要重按下去才是点击操作，个人更喜欢轻触点击的中操作方式，网上搜索基本都是依靠 GDM/KDM 这种桌面管理其实现的修改方式，自己使用的 i3-wm 的平铺式桌面，基本上就只有修改对应的配置文件或者命令行方式了，就研究了一番，把对应的命令操作记录下来，在 Archlinux 上我用到的就 xinput 这一条命令了。</p>
+<h3 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h3><p>首先查看设备列表</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput           </span><br><span class="line">⎡ Virtual core pointer                    	id=2	[master pointer  (3)]</span><br><span class="line">⎜   ↳ Virtual core XTEST pointer              	id=4	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳     Mouse                               	id=16	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳     Touchpad                            	id=17	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ SONiX USB DEVICE Consumer Control       	id=11	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ USB Optical Mouse                       	id=21	[slave  pointer  (2)]</span><br><span class="line">⎣ Virtual core keyboard                   	id=3	[master keyboard (2)]</span><br><span class="line">    ↳ Virtual core XTEST keyboard             	id=5	[slave  keyboard (3)]</span><br><span class="line">    ↳ Power Button                            	id=6	[slave  keyboard (3)]</span><br><span class="line">    ↳ Video Bus                               	id=7	[slave  keyboard (3)]</span><br><span class="line">    ↳ Video Bus                               	id=8	[slave  keyboard (3)]</span><br><span class="line">    ↳ Power Button                            	id=9	[slave  keyboard (3)]</span><br><span class="line">    ↳ Sleep Button                            	id=10	[slave  keyboard (3)]</span><br><span class="line">    ↳ HD WebCam: HD WebCam                    	id=18	[slave  keyboard (3)]</span><br><span class="line">    ↳ AT Translated Set 2 keyboard            	id=19	[slave  keyboard (3)]</span><br><span class="line">    ↳ Acer WMI hotkeys                        	id=20	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE Consumer Control       	id=12	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE Keyboard               	id=13	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE System Control         	id=14	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE                        	id=15	[slave  keyboard (3)]</span><br></pre></td></tr></table></figure>
+<p>其中 id=16 的设备则为笔记本上的触摸板模拟鼠标</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput list-props 17</span><br><span class="line">Device <span class="string">'    Touchpad'</span>:</span><br><span class="line">	Device Enabled (169):	1</span><br><span class="line">	Coordinate Transformation Matrix (171):	1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000</span><br><span class="line">	libinput Tapping Enabled (324):	0</span><br><span class="line">	libinput Tapping Enabled Default (325):	0</span><br><span class="line">	libinput Tapping Drag Enabled (326):	1</span><br><span class="line">	libinput Tapping Drag Enabled Default (327):	1</span><br><span class="line">	libinput Tapping Drag Lock Enabled (328):	0</span><br><span class="line">	libinput Tapping Drag Lock Enabled Default (329):	0</span><br><span class="line">	libinput Tapping Button Mapping Enabled (330):	1, 0</span><br><span class="line">	libinput Tapping Button Mapping Default (331):	1, 0</span><br><span class="line">	libinput Natural Scrolling Enabled (304):	0</span><br><span class="line">	libinput Natural Scrolling Enabled Default (305):	0</span><br><span class="line">	libinput Disable While Typing Enabled (332):	1</span><br><span class="line">	libinput Disable While Typing Enabled Default (333):	1</span><br><span class="line">	libinput Scroll Methods Available (308):	1, 1, 0</span><br><span class="line">	libinput Scroll Method Enabled (309):	1, 0, 0</span><br><span class="line">	libinput Scroll Method Enabled Default (310):	1, 0, 0</span><br><span class="line">	libinput Click Methods Available (334):	1, 1</span><br><span class="line">	libinput Click Method Enabled (335):	1, 0</span><br><span class="line">	libinput Click Method Enabled Default (336):	1, 0</span><br><span class="line">	libinput Middle Emulation Enabled (315):	0</span><br><span class="line">	libinput Middle Emulation Enabled Default (316):	0</span><br><span class="line">	libinput Accel Speed (317):	0.000000</span><br><span class="line">	libinput Accel Speed Default (318):	0.000000</span><br><span class="line">	libinput Left Handed Enabled (322):	0</span><br><span class="line">	libinput Left Handed Enabled Default (323):	0</span><br><span class="line">	libinput Send Events Modes Available (289):	1, 1</span><br><span class="line">	libinput Send Events Mode Enabled (290):	0, 0</span><br><span class="line">	libinput Send Events Mode Enabled Default (291):	0, 0</span><br><span class="line">	Device Node (292):	<span class="string">"/dev/input/event8"</span></span><br><span class="line">	Device Product ID (293):	1739, 10608</span><br><span class="line">	libinput Drag Lock Buttons (306):	&lt;no items&gt;</span><br><span class="line">	libinput Horizontal Scroll Enabled (307):	1</span><br></pre></td></tr></table></figure>
+<p>其中属性 libinput Tapping Enabled (324) 和 325 则是轻触点击，当前值均为0，被禁用，将对应值设置为1即可启用轻触点击。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput <span class="built_in">set</span>-prop 17 324 1</span><br></pre></td></tr></table></figure>
+<p>device id 会在重启后变更，因此可以使用对应字符串获取对应 device id，然后再获取到对应的属性，将其开启：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deviceid=`xinput | grep <span class="string">"Touchpad"</span> | awk -F<span class="string">" "</span> &#123;<span class="string">'print $4'</span>&#125; | awk -F<span class="string">"="</span> &#123;<span class="string">'print $2'</span>&#125;`</span><br></pre></td></tr></table></figure>
+<p>获取到 device id。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">propid=`xinput list-props <span class="variable">$&#123;deviceid&#125;</span> | grep <span class="string">"libinput Tapping Enabled ("</span> | awk -F<span class="string">" "</span> &#123;<span class="string">'print $4'</span>&#125;</span><br><span class="line">propid=<span class="variable">$&#123;propid:1:3&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$propid</span></span><br><span class="line">324</span><br></pre></td></tr></table></figure>
+<p>再获取到属性 id。</p>
+<p>接着就可以直接对 device id 和其对应的属性 id 设置值。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput <span class="built_in">set</span>-prop <span class="variable">$&#123;deviceid&#125;</span> <span class="variable">$&#123;propid&#125;</span> 1</span><br></pre></td></tr></table></figure>
+<p>然后把这些组成 shell 脚本，再添加开机启动任务就可以生效了。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>利用Git rebase使提交记录清晰明了</title>
+    <url>/use_rebase_to_make_git_log_clear/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>显卡驱动作死，使用 nvidia-prime 管理显卡</title>
+    <url>/use_nvidia_prime_to_control_nvidia_card/</url>
     <content><![CDATA[<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>由于是本来就能使用 bumblebee ，所以只是卸载掉 bumblebee 之后安装nvidia-prime。</p>
 <p>系统版本：</p>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">                  -`                    orange@BiGOranGe </span><br><span class="line">                 .o+`                   ---------------- </span><br><span class="line">                `ooo/                   OS: Arch Linux x86_64 </span><br><span class="line">               `+oooo:                  Host: Aspire VN7-591G V1.15 </span><br><span class="line">              `+oooooo:                 Kernel: 4.18.16-arch1-1-ARCH </span><br><span class="line">              -+oooooo+:                Uptime: 9 mins </span><br><span class="line">            `/:-:++oooo+:               Packages: 1852 (pacman) </span><br><span class="line">           `/++++/+++++++:              Shell: zsh 5.6.2 </span><br><span class="line">          `/++++++++++++++:             Resolution: 1920x1080 </span><br><span class="line">         `/+++ooooooooooooo/`           DE: Deepin </span><br><span class="line">        ./ooosssso++osssssso+`          WM: Mutter(DeepinGala) </span><br><span class="line">       .oossssso-````/ossssss+`         Theme: Adapta-Nokto [GTK2/3] </span><br><span class="line">      -osssssso.      :ssssssso.        Icons: Numix-Circle [GTK2/3] </span><br><span class="line">     :osssssss/        osssso+++.       Terminal: deepin-terminal </span><br><span class="line">    /ossssssss/        +ssssooo/-       Terminal Font: Noto Mono for Powerline 11 </span><br><span class="line">  `/ossssso+/:-        -:/+osssso+-     CPU: Intel i5-4210H (4) @ 3.500GHz </span><br><span class="line"> `+sso+:-`                 `.-/+oso:    GPU: Intel 4th Gen Core Processor </span><br><span class="line">`++:.                           `-/+/   GPU: NVIDIA GeForce GTX 860M </span><br><span class="line">.`                                 `/   Memory: 2926MiB / 7899MiB</span><br></pre></td></tr></table></figure>
@@ -398,6 +385,59 @@ participant 终端代理 B
         <tag>nvidia</tag>
         <tag>nvidia-primes</tag>
         <tag>bumblebee</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>桌面无线进化 连接蓝牙鼠标和键盘</title>
+    <url>/%E6%A1%8C%E9%9D%A2%E6%97%A0%E7%BA%BF%E8%BF%9B%E5%8C%96-%E8%BF%9E%E6%8E%A5%E8%93%9D%E7%89%99%E9%BC%A0%E6%A0%87%E5%92%8C%E9%94%AE%E7%9B%98/</url>
+    <content><![CDATA[<h4 id="鼠标键盘"><a href="#鼠标键盘" class="headerlink" title="鼠标键盘"></a>鼠标键盘</h4><p>键盘：RK 61 Cherry 茶轴 黑色</p>
+<p>鼠标：达尔优 LM108 垂直人体工学鼠标</p>
+<p>软件包： bluetoorhctl</p>
+<h4 id="连接鼠标"><a href="#连接鼠标" class="headerlink" title="连接鼠标"></a>连接鼠标</h4><p>打开鼠标开关</p>
+<p>达尔优 LM108 底面左上角有一个黑色按钮，为蓝牙配对按钮</p>
+<p>长按进入蓝牙配对模式</p>
+<p>电脑上使用 bluetoothctl 进行蓝牙管理</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">Agent registered</span><br><span class="line">[CHG] Controller 60:57:18:1C:C1:8F Pairable: yes</span><br><span class="line"><span class="meta">[bluetooth]#</span><span class="bash"> scan on</span></span><br><span class="line">Discovery started</span><br></pre></td></tr></table></figure>
+<p>当扫描到对应蓝牙设备的 mac 时，使用</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pair &lt;mac-of-mouse&gt;</span><br></pre></td></tr></table></figure>
+<p>进行配对连接</p>
+<p>此时会弹出提示框输入 yes 以确认配对设备</p>
+<p>配对之后输入 connect <mac-of-moouse> 连接鼠标</mac-of-moouse></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">connect &lt;mac-of-mouse&gt;</span><br></pre></td></tr></table></figure>
+<p>至此鼠标连接成功。</p>
+<p>接下来以蓝牙方式连接键盘</p>
+<h4 id="连接键盘"><a href="#连接键盘" class="headerlink" title="连接键盘"></a>连接键盘</h4><p>去 RK 官网查看 RK 61 双模键盘使用方式</p>
+<p>我这里为第一版， Tab 和 P 键上都有镭射标记</p>
+<p>Fn + Tab 为蓝牙有线连接方式切换，出厂默认为蓝牙连接方式</p>
+<p>Fn + P 进入蓝牙配对模式</p>
+<p>首先打开键盘背部开关开启键盘</p>
+<p>出厂默认为蓝牙连接方式，则按下 Fn + P 进入蓝牙配对模式，此时 P 键连续闪烁</p>
+<p>在电脑上进入 bluetoothctl 进行蓝牙配对</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">scan on</span><br><span class="line"><span class="meta">#</span><span class="bash"> 扫描到蓝牙键盘后使用 pair &lt;mac-of-keyboard&gt; 进行配对</span></span><br><span class="line">pair &lt;mac-of-keyboard&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 输入 yes 以确认配对</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 配对成功之后使用 connect &lt;mac-of-keyboard&gt; 进行连接</span></span><br><span class="line">connect &lt;mac-of-keyboard&gt;</span><br></pre></td></tr></table></figure>
+<p>至此键盘和鼠标的连接完成</p>
+<p>接下来进行鼠标延迟的优化</p>
+<h4 id="鼠标延迟优化"><a href="#鼠标延迟优化" class="headerlink" title="鼠标延迟优化"></a>鼠标延迟优化</h4><p>修改鼠标轮询率</p>
+<p>查看蓝牙鼠标 mac 地址</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">Agent registered</span><br><span class="line">[CHG] Controller 60:57:18:1C:C1:8F Pairable: yes</span><br><span class="line">[RK-Bluetooth keyboard]# devices</span><br><span class="line">Device DC:2C:26:D0:08:02 RK-Bluetooth keyboard</span><br><span class="line">Device FA:0C:38:6A:EC:CE LM108 Bluetooth</span><br></pre></td></tr></table></figure>
+<p>查看系统蓝牙适配器 mac 地址</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[RK-Bluetooth keyboard]# list</span><br><span class="line">Controller 60:57:18:1C:C1:8F BiGOranGe [default]</span><br></pre></td></tr></table></figure>
+<p>var 下目录需要超级管理员权限才可以查看修改</p>
+<p>在超级管理员状态下修改 <code>/var/lib/bluetooth/&lt;mac-of-adaptor&gt;/&lt;mac-of-mouse&gt;/info</code>添加/修改以下字段</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ConnectionParameters]</span><br><span class="line">MinInterval=6</span><br><span class="line">MaxInterval=9</span><br><span class="line">Latency=44</span><br><span class="line">Timeout=216</span><br></pre></td></tr></table></figure>
+<p>修改之前的值</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ConnectionParameters]</span><br><span class="line">MinInterval=6</span><br><span class="line">MaxInterval=9</span><br><span class="line">Latency=100</span><br><span class="line">Timeout=600</span><br></pre></td></tr></table></figure>
+<p>可以自己根据自己的需求调节这两个值进行优化，以达到自己满意的状态</p>
+<h4 id="设置蓝牙自动连接"><a href="#设置蓝牙自动连接" class="headerlink" title="设置蓝牙自动连接"></a>设置蓝牙自动连接</h4><p>修改/添加 <code>/etc/bluetooth/main.conf</code>的<code>[Policy]</code>下添加<code>AutoEnable=true</code>将蓝牙设备设置为开机自动连接</p>
+]]></content>
+      <categories>
+        <category>Arch Linux</category>
+        <category>peripherals</category>
+      </categories>
+      <tags>
+        <tag>Arch Linux</tag>
+        <tag>bluetooth</tag>
+        <tag>keyboard</tag>
+        <tag>mouse</tag>
       </tags>
   </entry>
 </search>

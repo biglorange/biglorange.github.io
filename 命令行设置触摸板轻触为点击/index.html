@@ -109,14 +109,14 @@
 
 
   <meta name="description" content="在命令行下设置触摸板轻触为点击">
-<meta name="keywords" content="-- Archlinux">
+<meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="命令行设置触摸板轻触为点击">
 <meta property="og:url" content="https://biglorange.github.io/命令行设置触摸板轻触为点击/index.html">
 <meta property="og:site_name" content="BigOrange Blog">
 <meta property="og:description" content="在命令行下设置触摸板轻触为点击">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-25T15:21:46.461Z">
+<meta property="og:updated_time" content="2020-08-26T14:30:14.738Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="命令行设置触摸板轻触为点击">
 <meta name="twitter:description" content="在命令行下设置触摸板轻触为点击">
@@ -353,12 +353,24 @@
                 
               
 
-              <time title="Created: 2019-12-25 23:16:09 / Modified: 23:21:46" itemprop="dateCreated datePublished" datetime="2019-12-25T23:16:09+08:00">2019-12-25</time>
+              <time title="Created: 2019-12-25 23:16:09" itemprop="dateCreated datePublished" datetime="2019-12-25T23:16:09+08:00">2019-12-25</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2020-08-26 22:30:14" itemprop="dateModified" datetime="2020-08-26T22:30:14+08:00">2020-08-26</time>
               
             
           </span>
@@ -375,7 +387,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Archlinux/" itemprop="url" rel="index"><span itemprop="name">-- Archlinux</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
 
                 
                 
@@ -411,7 +423,21 @@
       
 
       
-        <p>xinput list-props<br>显示所有 xinput 设备<br>xinput list-props <device-id><br>显示设备下的属性<br>xinput set-props 12 313 1<br>设置 <device-id> 下 313 属性 开启 即 触摸板下轻点开启</device-id></device-id></p>
+        <h3 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h3><p>在 Linux 下使用触摸板的时候总是需要重按下去才是点击操作，个人更喜欢轻触点击的中操作方式，网上搜索基本都是依靠 GDM/KDM 这种桌面管理其实现的修改方式，自己使用的 i3-wm 的平铺式桌面，基本上就只有修改对应的配置文件或者命令行方式了，就研究了一番，把对应的命令操作记录下来，在 Archlinux 上我用到的就 xinput 这一条命令了。</p>
+<h3 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h3><p>首先查看设备列表</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">xinput           </span><br><span class="line">⎡ Virtual core pointer                    	id=2	[master pointer  (3)]</span><br><span class="line">⎜   ↳ Virtual core XTEST pointer              	id=4	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳     Mouse                               	id=16	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳     Touchpad                            	id=17	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ SONiX USB DEVICE Consumer Control       	id=11	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ USB Optical Mouse                       	id=21	[slave  pointer  (2)]</span><br><span class="line">⎣ Virtual core keyboard                   	id=3	[master keyboard (2)]</span><br><span class="line">    ↳ Virtual core XTEST keyboard             	id=5	[slave  keyboard (3)]</span><br><span class="line">    ↳ Power Button                            	id=6	[slave  keyboard (3)]</span><br><span class="line">    ↳ Video Bus                               	id=7	[slave  keyboard (3)]</span><br><span class="line">    ↳ Video Bus                               	id=8	[slave  keyboard (3)]</span><br><span class="line">    ↳ Power Button                            	id=9	[slave  keyboard (3)]</span><br><span class="line">    ↳ Sleep Button                            	id=10	[slave  keyboard (3)]</span><br><span class="line">    ↳ HD WebCam: HD WebCam                    	id=18	[slave  keyboard (3)]</span><br><span class="line">    ↳ AT Translated Set 2 keyboard            	id=19	[slave  keyboard (3)]</span><br><span class="line">    ↳ Acer WMI hotkeys                        	id=20	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE Consumer Control       	id=12	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE Keyboard               	id=13	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE System Control         	id=14	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE                        	id=15	[slave  keyboard (3)]</span><br></pre></td></tr></table></figure>
+<p>其中 id=16 的设备则为笔记本上的触摸板模拟鼠标</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">xinput list-props 17</span><br><span class="line">Device <span class="string">'    Touchpad'</span>:</span><br><span class="line">	Device Enabled (169):	1</span><br><span class="line">	Coordinate Transformation Matrix (171):	1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000</span><br><span class="line">	libinput Tapping Enabled (324):	0</span><br><span class="line">	libinput Tapping Enabled Default (325):	0</span><br><span class="line">	libinput Tapping Drag Enabled (326):	1</span><br><span class="line">	libinput Tapping Drag Enabled Default (327):	1</span><br><span class="line">	libinput Tapping Drag Lock Enabled (328):	0</span><br><span class="line">	libinput Tapping Drag Lock Enabled Default (329):	0</span><br><span class="line">	libinput Tapping Button Mapping Enabled (330):	1, 0</span><br><span class="line">	libinput Tapping Button Mapping Default (331):	1, 0</span><br><span class="line">	libinput Natural Scrolling Enabled (304):	0</span><br><span class="line">	libinput Natural Scrolling Enabled Default (305):	0</span><br><span class="line">	libinput Disable While Typing Enabled (332):	1</span><br><span class="line">	libinput Disable While Typing Enabled Default (333):	1</span><br><span class="line">	libinput Scroll Methods Available (308):	1, 1, 0</span><br><span class="line">	libinput Scroll Method Enabled (309):	1, 0, 0</span><br><span class="line">	libinput Scroll Method Enabled Default (310):	1, 0, 0</span><br><span class="line">	libinput Click Methods Available (334):	1, 1</span><br><span class="line">	libinput Click Method Enabled (335):	1, 0</span><br><span class="line">	libinput Click Method Enabled Default (336):	1, 0</span><br><span class="line">	libinput Middle Emulation Enabled (315):	0</span><br><span class="line">	libinput Middle Emulation Enabled Default (316):	0</span><br><span class="line">	libinput Accel Speed (317):	0.000000</span><br><span class="line">	libinput Accel Speed Default (318):	0.000000</span><br><span class="line">	libinput Left Handed Enabled (322):	0</span><br><span class="line">	libinput Left Handed Enabled Default (323):	0</span><br><span class="line">	libinput Send Events Modes Available (289):	1, 1</span><br><span class="line">	libinput Send Events Mode Enabled (290):	0, 0</span><br><span class="line">	libinput Send Events Mode Enabled Default (291):	0, 0</span><br><span class="line">	Device Node (292):	<span class="string">"/dev/input/event8"</span></span><br><span class="line">	Device Product ID (293):	1739, 10608</span><br><span class="line">	libinput Drag Lock Buttons (306):	&lt;no items&gt;</span><br><span class="line">	libinput Horizontal Scroll Enabled (307):	1</span><br></pre></td></tr></table></figure>
+<p>其中属性 libinput Tapping Enabled (324) 和 325 则是轻触点击，当前值均为0，被禁用，将对应值设置为1即可启用轻触点击。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xinput <span class="built_in">set</span>-prop 17 324 1</span><br></pre></td></tr></table></figure>
+<p>device id 会在重启后变更，因此可以使用对应字符串获取对应 device id，然后再获取到对应的属性，将其开启：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deviceid=`xinput | grep <span class="string">"Touchpad"</span> | awk -F<span class="string">" "</span> &#123;<span class="string">'print $4'</span>&#125; | awk -F<span class="string">"="</span> &#123;<span class="string">'print $2'</span>&#125;`</span><br></pre></td></tr></table></figure>
+<p>获取到 device id。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">propid=`xinput list-props <span class="variable">$&#123;deviceid&#125;</span> | grep <span class="string">"libinput Tapping Enabled ("</span> | awk -F<span class="string">" "</span> &#123;<span class="string">'print $4'</span>&#125;</span><br><span class="line">propid=<span class="variable">$&#123;propid:1:3&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$propid</span></span><br><span class="line">324</span><br></pre></td></tr></table></figure>
+<p>再获取到属性 id。</p>
+<p>接着就可以直接对 device id 和其对应的属性 id 设置值。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xinput <span class="built_in">set</span>-prop <span class="variable">$&#123;deviceid&#125;</span> <span class="variable">$&#123;propid&#125;</span> 1</span><br></pre></td></tr></table></figure>
+<p>然后把这些组成 shell 脚本，再添加开机启动任务就可以生效了。</p>
 
       
     </div>
@@ -432,7 +458,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Archlinux/" rel="tag"><i class="fa fa-tag"></i> -- Archlinux</a>
+            <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
           
         </div>
       
@@ -502,8 +528,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -520,7 +555,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -532,8 +567,6 @@
                 <div class="site-state-item site-state-categories">
                   
                     
-                    
-                      
                     
                       
                     
@@ -628,8 +661,6 @@
                     
                       
                     
-                      
-                    
                     <span class="site-state-item-count">16</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
@@ -672,6 +703,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#起因"><span class="nav-number">1.</span> <span class="nav-text">起因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现方式"><span class="nav-number">2.</span> <span class="nav-text">实现方式</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
