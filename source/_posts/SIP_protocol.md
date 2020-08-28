@@ -19,7 +19,7 @@ SIP（Session Initiation Protocol，会话初始化协议）是由 IETF（Intern
 
 SIP 协议在协议栈中的位置
 
-![](./SIP协议/SIP协议在协议栈中的位置_01.bmp)
+![](SIP协议在协议栈中的位置_01.bmp)
 
 SIP 协议虽然属于应用层协议，然而 SIP 本身不提供任何服务。但是 SIP 是通信的基础，在 SIP 这个通信的基础上可以用来构建不同的服务。SIP 协议在建立和位置多媒体会话中，主要支持如下5个功能：
 
@@ -143,7 +143,7 @@ participant 终端代理 B
 
 会话更改流程
 
-
+To be continued...
 
 
 
@@ -151,11 +151,11 @@ participant 终端代理 B
 
 参考文献
 
-[1]. (会话初始化协议（SIP）简介及应用)https://www.ibm.com/developerworks/cn/opensource/os-cn-sip-intro/index.html
+[1]. [会话初始化协议（SIP）简介及应用](https://www.ibm.com/developerworks/cn/opensource/os-cn-sip-intro/index.html)
 
-[2]. （SIP协议详解）https://www.cnblogs.com/xiaxveliang/p/12434170.html
+[2]. [SIP协议详解](https://www.cnblogs.com/xiaxveliang/p/12434170.html)
 
-[3]. （SIP 协议呼叫流程详解）https://yq.aliyun.com/articles/243203
+[3]. [SIP 协议呼叫流程详解](https://yq.aliyun.com/articles/243203)
 
 
 
