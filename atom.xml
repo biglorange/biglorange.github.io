@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://biglorange.github.io/"/>
-  <updated>2020-11-28T13:36:48.780Z</updated>
+  <updated>2020-12-08T14:47:39.669Z</updated>
   <id>https://biglorange.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux 下 wait_pid 和 vfork 使用</title>
+    <link href="https://biglorange.github.io/linux-wait-pid-usage/"/>
+    <id>https://biglorange.github.io/linux-wait-pid-usage/</id>
+    <published>2020-12-08T13:14:48.000Z</published>
+    <updated>2020-12-08T14:47:39.669Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="调用-vfork-创建子进程"><a href="#调用-vfork-创建子进程" class="headerlink" title="调用 vfork 创建子进程"></a>调用 vfork 创建子进程</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pid_t</span> pid = vfork();</span><br><span class="line"><span class="keyword">if</span> (pid &lt; <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    perror(<span class="string">"vfork failed."</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"this is parent process."</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (pid &gt; <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"this is child process."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>vfork 用于创建一个新进程，和 fork 不同， vfork 不将父进程的地址空间完全复制到子进程中，不会复制页表<br>vfork 执行一次会返回两个返回值</p><ol><li>在子进程中返回0</li><li>在父进程中返回子进程 pid_t<br>执行失败返回 -1</li></ol><h2 id="调用-waitpid-等待子进程结束"><a href="#调用-waitpid-等待子进程结束" class="headerlink" title="调用 waitpid 等待子进程结束"></a>调用 waitpid 等待子进程结束</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">waitpid(pid, &amp;status, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span> (WIFEXITED(status))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"child process exit normally, return code is %d."</span>, WEXITSTATUS(status));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (WIFSIGNALED(status))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"child process exit abnormally, return code is %d."</span>, WTERMSIG(status));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>waitpid() 会暂时停止目前程序的执行，知道有信号来到或子进程结束<br>其中 pid 为子进程 pid, status 为要返回的子进程的结束状态<br>有如下几个宏可以用来判别结束情况</p><ul><li><code>WIFEXITED(status)</code> 如果子进程正常结束则为非 0 值。</li><li><code>WEXITSTATUS(status)</code> 取得子进程 exit()返回的结束代码,一般会先用 WIFEXITED 来判断是否正常结束才能使用此宏。</li><li><code>WIFSIGNALED(status)</code> 如果子进程是因为信号而结束则此宏值为真</li><li><code>WTERMSIG(status</code>) 取得子进程因信号而中止的信号代码,一般会先用 WIFSIGNALED 来判断后才使用此宏。</li><li><code>WIFSTOPPED(status)</code> 如果子进程处于暂停执行情况则此宏值为真。一般只有使用 WUNTRACED 时才会有此情况。</li><li><code>WSTOPSIG(status)</code> 取得引发子进程暂停的信号代码,一般会先用 WIFSTOPPED 来判断后才使用此宏。</li><li>如果执行成功则返回子进程识别码(PID) ,如果有错误发生则返回返回值-1。失败原因存于 errno 中。</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      Linux 下使用 vfork 创建子进程，waitpid 获取子进程返回状态
+    
+    </summary>
+    
+    
+      <category term="Linux" scheme="https://biglorange.github.io/categories/Linux/"/>
+    
+    
+      <category term="Linux" scheme="https://biglorange.github.io/tags/Linux/"/>
+    
+  </entry>
   
   <entry>
     <title>archlinux 安装并初始化配置 postgresql 9.4.26</title>

@@ -208,11 +208,6 @@ participant 终端代理 B
       </tags>
   </entry>
   <entry>
-    <title>利用Git rebase使提交记录清晰明了</title>
-    <url>/use_rebase_to_make_git_log_clear/</url>
-    <content><![CDATA[]]></content>
-  </entry>
-  <entry>
     <title>Linux 下降低 CPU 电压</title>
     <url>/downgrade_cpu_voltage_on_linux/</url>
     <content><![CDATA[<h4 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h4><p>python-undervolt</p>
@@ -321,82 +316,31 @@ participant 终端代理 B
       </tags>
   </entry>
   <entry>
-    <title>命令行设置触摸板轻触为点击</title>
-    <url>/%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%AE%BE%E7%BD%AE%E8%A7%A6%E6%91%B8%E6%9D%BF%E8%BD%BB%E8%A7%A6%E4%B8%BA%E7%82%B9%E5%87%BB/</url>
-    <content><![CDATA[<h3 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h3><p>在 Linux 下使用触摸板的时候总是需要重按下去才是点击操作，个人更喜欢轻触点击的中操作方式，网上搜索基本都是依靠 GDM/KDM 这种桌面管理其实现的修改方式，自己使用的 i3-wm 的平铺式桌面，基本上就只有修改对应的配置文件或者命令行方式了，就研究了一番，把对应的命令操作记录下来，在 Archlinux 上我用到的就 xinput 这一条命令了。</p>
-<h3 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h3><p>首先查看设备列表</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput           </span><br><span class="line">⎡ Virtual core pointer                    	id=2	[master pointer  (3)]</span><br><span class="line">⎜   ↳ Virtual core XTEST pointer              	id=4	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳     Mouse                               	id=16	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳     Touchpad                            	id=17	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ SONiX USB DEVICE Consumer Control       	id=11	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ USB Optical Mouse                       	id=21	[slave  pointer  (2)]</span><br><span class="line">⎣ Virtual core keyboard                   	id=3	[master keyboard (2)]</span><br><span class="line">    ↳ Virtual core XTEST keyboard             	id=5	[slave  keyboard (3)]</span><br><span class="line">    ↳ Power Button                            	id=6	[slave  keyboard (3)]</span><br><span class="line">    ↳ Video Bus                               	id=7	[slave  keyboard (3)]</span><br><span class="line">    ↳ Video Bus                               	id=8	[slave  keyboard (3)]</span><br><span class="line">    ↳ Power Button                            	id=9	[slave  keyboard (3)]</span><br><span class="line">    ↳ Sleep Button                            	id=10	[slave  keyboard (3)]</span><br><span class="line">    ↳ HD WebCam: HD WebCam                    	id=18	[slave  keyboard (3)]</span><br><span class="line">    ↳ AT Translated Set 2 keyboard            	id=19	[slave  keyboard (3)]</span><br><span class="line">    ↳ Acer WMI hotkeys                        	id=20	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE Consumer Control       	id=12	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE Keyboard               	id=13	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE System Control         	id=14	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE                        	id=15	[slave  keyboard (3)]</span><br></pre></td></tr></table></figure>
-<p>其中 id=16 的设备则为笔记本上的触摸板模拟鼠标</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput list-props 17</span><br><span class="line">Device <span class="string">'    Touchpad'</span>:</span><br><span class="line">	Device Enabled (169):	1</span><br><span class="line">	Coordinate Transformation Matrix (171):	1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000</span><br><span class="line">	libinput Tapping Enabled (324):	0</span><br><span class="line">	libinput Tapping Enabled Default (325):	0</span><br><span class="line">	libinput Tapping Drag Enabled (326):	1</span><br><span class="line">	libinput Tapping Drag Enabled Default (327):	1</span><br><span class="line">	libinput Tapping Drag Lock Enabled (328):	0</span><br><span class="line">	libinput Tapping Drag Lock Enabled Default (329):	0</span><br><span class="line">	libinput Tapping Button Mapping Enabled (330):	1, 0</span><br><span class="line">	libinput Tapping Button Mapping Default (331):	1, 0</span><br><span class="line">	libinput Natural Scrolling Enabled (304):	0</span><br><span class="line">	libinput Natural Scrolling Enabled Default (305):	0</span><br><span class="line">	libinput Disable While Typing Enabled (332):	1</span><br><span class="line">	libinput Disable While Typing Enabled Default (333):	1</span><br><span class="line">	libinput Scroll Methods Available (308):	1, 1, 0</span><br><span class="line">	libinput Scroll Method Enabled (309):	1, 0, 0</span><br><span class="line">	libinput Scroll Method Enabled Default (310):	1, 0, 0</span><br><span class="line">	libinput Click Methods Available (334):	1, 1</span><br><span class="line">	libinput Click Method Enabled (335):	1, 0</span><br><span class="line">	libinput Click Method Enabled Default (336):	1, 0</span><br><span class="line">	libinput Middle Emulation Enabled (315):	0</span><br><span class="line">	libinput Middle Emulation Enabled Default (316):	0</span><br><span class="line">	libinput Accel Speed (317):	0.000000</span><br><span class="line">	libinput Accel Speed Default (318):	0.000000</span><br><span class="line">	libinput Left Handed Enabled (322):	0</span><br><span class="line">	libinput Left Handed Enabled Default (323):	0</span><br><span class="line">	libinput Send Events Modes Available (289):	1, 1</span><br><span class="line">	libinput Send Events Mode Enabled (290):	0, 0</span><br><span class="line">	libinput Send Events Mode Enabled Default (291):	0, 0</span><br><span class="line">	Device Node (292):	<span class="string">"/dev/input/event8"</span></span><br><span class="line">	Device Product ID (293):	1739, 10608</span><br><span class="line">	libinput Drag Lock Buttons (306):	&lt;no items&gt;</span><br><span class="line">	libinput Horizontal Scroll Enabled (307):	1</span><br></pre></td></tr></table></figure>
-<p>其中属性 libinput Tapping Enabled (324) 和 325 则是轻触点击，当前值均为0，被禁用，将对应值设置为1即可启用轻触点击。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput <span class="built_in">set</span>-prop 17 324 1</span><br></pre></td></tr></table></figure>
-<p>device id 会在重启后变更，因此可以使用对应字符串获取对应 device id，然后再获取到对应的属性，将其开启：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deviceid=`xinput | grep <span class="string">"Touchpad"</span> | awk -F<span class="string">" "</span> &#123;<span class="string">'print $4'</span>&#125; | awk -F<span class="string">"="</span> &#123;<span class="string">'print $2'</span>&#125;`</span><br></pre></td></tr></table></figure>
-<p>获取到 device id。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">propid=`xinput list-props <span class="variable">$&#123;deviceid&#125;</span> | grep <span class="string">"libinput Tapping Enabled ("</span> | awk -F<span class="string">" "</span> &#123;<span class="string">'print $4'</span>&#125;</span><br><span class="line">propid=<span class="variable">$&#123;propid:1:3&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$propid</span></span><br><span class="line">324</span><br></pre></td></tr></table></figure>
-<p>再获取到属性 id。</p>
-<p>接着就可以直接对 device id 和其对应的属性 id 设置值。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput <span class="built_in">set</span>-prop <span class="variable">$&#123;deviceid&#125;</span> <span class="variable">$&#123;propid&#125;</span> 1</span><br></pre></td></tr></table></figure>
-<p>然后把这些组成 shell 脚本，再添加开机启动任务就可以生效了。</p>
+    <title>Linux 下 wait_pid 和 vfork 使用</title>
+    <url>/linux-wait-pid-usage/</url>
+    <content><![CDATA[<h2 id="调用-vfork-创建子进程"><a href="#调用-vfork-创建子进程" class="headerlink" title="调用 vfork 创建子进程"></a>调用 vfork 创建子进程</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">pid_t</span> pid = vfork();</span><br><span class="line"><span class="keyword">if</span> (pid &lt; <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    perror(<span class="string">"vfork failed."</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"this is parent process."</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (pid &gt; <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"this is child process."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>vfork 用于创建一个新进程，和 fork 不同， vfork 不将父进程的地址空间完全复制到子进程中，不会复制页表<br>vfork 执行一次会返回两个返回值</p>
+<ol>
+<li>在子进程中返回0</li>
+<li>在父进程中返回子进程 pid_t<br>执行失败返回 -1</li>
+</ol>
+<h2 id="调用-waitpid-等待子进程结束"><a href="#调用-waitpid-等待子进程结束" class="headerlink" title="调用 waitpid 等待子进程结束"></a>调用 waitpid 等待子进程结束</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">waitpid(pid, &amp;status, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span> (WIFEXITED(status))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"child process exit normally, return code is %d."</span>, WEXITSTATUS(status));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (WIFSIGNALED(status))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"child process exit abnormally, return code is %d."</span>, WTERMSIG(status));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>waitpid() 会暂时停止目前程序的执行，知道有信号来到或子进程结束<br>其中 pid 为子进程 pid, status 为要返回的子进程的结束状态<br>有如下几个宏可以用来判别结束情况</p>
+<ul>
+<li><code>WIFEXITED(status)</code> 如果子进程正常结束则为非 0 值。</li>
+<li><code>WEXITSTATUS(status)</code> 取得子进程 exit()返回的结束代码,一般会先用 WIFEXITED 来判断是否正常结束才能使用此宏。</li>
+<li><code>WIFSIGNALED(status)</code> 如果子进程是因为信号而结束则此宏值为真</li>
+<li><code>WTERMSIG(status</code>) 取得子进程因信号而中止的信号代码,一般会先用 WIFSIGNALED 来判断后才使用此宏。</li>
+<li><code>WIFSTOPPED(status)</code> 如果子进程处于暂停执行情况则此宏值为真。一般只有使用 WUNTRACED 时才会有此情况。</li>
+<li><code>WSTOPSIG(status)</code> 取得引发子进程暂停的信号代码,一般会先用 WIFSTOPPED 来判断后才使用此宏。</li>
+<li>如果执行成功则返回子进程识别码(PID) ,如果有错误发生则返回返回值-1。失败原因存于 errno 中。</li>
+</ul>
 ]]></content>
       <categories>
         <category>Linux</category>
       </categories>
       <tags>
         <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>桌面无线进化 连接蓝牙鼠标和键盘</title>
-    <url>/%E6%A1%8C%E9%9D%A2%E6%97%A0%E7%BA%BF%E8%BF%9B%E5%8C%96-%E8%BF%9E%E6%8E%A5%E8%93%9D%E7%89%99%E9%BC%A0%E6%A0%87%E5%92%8C%E9%94%AE%E7%9B%98/</url>
-    <content><![CDATA[<h4 id="鼠标键盘"><a href="#鼠标键盘" class="headerlink" title="鼠标键盘"></a>鼠标键盘</h4><p>键盘：RK 61 Cherry 茶轴 黑色</p>
-<p>鼠标：达尔优 LM108 垂直人体工学鼠标</p>
-<p>软件包： bluetoorhctl</p>
-<h4 id="连接鼠标"><a href="#连接鼠标" class="headerlink" title="连接鼠标"></a>连接鼠标</h4><p>打开鼠标开关</p>
-<p>达尔优 LM108 底面左上角有一个黑色按钮，为蓝牙配对按钮</p>
-<p>长按进入蓝牙配对模式</p>
-<p>电脑上使用 bluetoothctl 进行蓝牙管理</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">Agent registered</span><br><span class="line">[CHG] Controller 60:57:18:1C:C1:8F Pairable: yes</span><br><span class="line"><span class="meta">[bluetooth]#</span><span class="bash"> scan on</span></span><br><span class="line">Discovery started</span><br></pre></td></tr></table></figure>
-<p>当扫描到对应蓝牙设备的 mac 时，使用</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pair &lt;mac-of-mouse&gt;</span><br></pre></td></tr></table></figure>
-<p>进行配对连接</p>
-<p>此时会弹出提示框输入 yes 以确认配对设备</p>
-<p>配对之后输入 connect <mac-of-moouse> 连接鼠标</mac-of-moouse></p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">connect &lt;mac-of-mouse&gt;</span><br></pre></td></tr></table></figure>
-<p>至此鼠标连接成功。</p>
-<p>接下来以蓝牙方式连接键盘</p>
-<h4 id="连接键盘"><a href="#连接键盘" class="headerlink" title="连接键盘"></a>连接键盘</h4><p>去 RK 官网查看 RK 61 双模键盘使用方式</p>
-<p>我这里为第一版， Tab 和 P 键上都有镭射标记</p>
-<p>Fn + Tab 为蓝牙有线连接方式切换，出厂默认为蓝牙连接方式</p>
-<p>Fn + P 进入蓝牙配对模式</p>
-<p>首先打开键盘背部开关开启键盘</p>
-<p>出厂默认为蓝牙连接方式，则按下 Fn + P 进入蓝牙配对模式，此时 P 键连续闪烁</p>
-<p>在电脑上进入 bluetoothctl 进行蓝牙配对</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">scan on</span><br><span class="line"><span class="meta">#</span><span class="bash"> 扫描到蓝牙键盘后使用 pair &lt;mac-of-keyboard&gt; 进行配对</span></span><br><span class="line">pair &lt;mac-of-keyboard&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 输入 yes 以确认配对</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 配对成功之后使用 connect &lt;mac-of-keyboard&gt; 进行连接</span></span><br><span class="line">connect &lt;mac-of-keyboard&gt;</span><br></pre></td></tr></table></figure>
-<p>至此键盘和鼠标的连接完成</p>
-<p>接下来进行鼠标延迟的优化</p>
-<h4 id="鼠标延迟优化"><a href="#鼠标延迟优化" class="headerlink" title="鼠标延迟优化"></a>鼠标延迟优化</h4><p>修改鼠标轮询率</p>
-<p>查看蓝牙鼠标 mac 地址</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">Agent registered</span><br><span class="line">[CHG] Controller 60:57:18:1C:C1:8F Pairable: yes</span><br><span class="line">[RK-Bluetooth keyboard]# devices</span><br><span class="line">Device DC:2C:26:D0:08:02 RK-Bluetooth keyboard</span><br><span class="line">Device FA:0C:38:6A:EC:CE LM108 Bluetooth</span><br></pre></td></tr></table></figure>
-<p>查看系统蓝牙适配器 mac 地址</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[RK-Bluetooth keyboard]# list</span><br><span class="line">Controller 60:57:18:1C:C1:8F BiGOranGe [default]</span><br></pre></td></tr></table></figure>
-<p>var 下目录需要超级管理员权限才可以查看修改</p>
-<p>在超级管理员状态下修改 <code>/var/lib/bluetooth/&lt;mac-of-adaptor&gt;/&lt;mac-of-mouse&gt;/info</code>添加/修改以下字段</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ConnectionParameters]</span><br><span class="line">MinInterval=6</span><br><span class="line">MaxInterval=9</span><br><span class="line">Latency=44</span><br><span class="line">Timeout=216</span><br></pre></td></tr></table></figure>
-<p>修改之前的值</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ConnectionParameters]</span><br><span class="line">MinInterval=6</span><br><span class="line">MaxInterval=9</span><br><span class="line">Latency=100</span><br><span class="line">Timeout=600</span><br></pre></td></tr></table></figure>
-<p>可以自己根据自己的需求调节这两个值进行优化，以达到自己满意的状态</p>
-<h4 id="设置蓝牙自动连接"><a href="#设置蓝牙自动连接" class="headerlink" title="设置蓝牙自动连接"></a>设置蓝牙自动连接</h4><p>修改/添加 <code>/etc/bluetooth/main.conf</code>的<code>[Policy]</code>下添加<code>AutoEnable=true</code>将蓝牙设备设置为开机自动连接</p>
-]]></content>
-      <categories>
-        <category>Arch Linux</category>
-        <category>peripherals</category>
-      </categories>
-      <tags>
-        <tag>Arch Linux</tag>
-        <tag>bluetooth</tag>
-        <tag>keyboard</tag>
-        <tag>mouse</tag>
       </tags>
   </entry>
   <entry>
@@ -491,6 +435,11 @@ participant 终端代理 B
       </tags>
   </entry>
   <entry>
+    <title>利用Git rebase使提交记录清晰明了</title>
+    <url>/use_rebase_to_make_git_log_clear/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>显卡驱动作死（续）显卡控制切换脚本化</title>
     <url>/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E4%BD%9C%E6%AD%BB%EF%BC%88%E7%BB%AD%EF%BC%89%E6%98%BE%E5%8D%A1%E6%8E%A7%E5%88%B6%E5%88%87%E6%8D%A2%E8%84%9A%E6%9C%AC%E5%8C%96/</url>
     <content><![CDATA[<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>首先确保直接使用 nVidia 闭源驱动能够正常工作，同时 bumblebee 也是能够正常工作的。</p>
@@ -520,6 +469,85 @@ participant 终端代理 B
         <tag>nvidia</tag>
         <tag>nvidia-primes</tag>
         <tag>bumblebee</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>命令行设置触摸板轻触为点击</title>
+    <url>/%E5%91%BD%E4%BB%A4%E8%A1%8C%E8%AE%BE%E7%BD%AE%E8%A7%A6%E6%91%B8%E6%9D%BF%E8%BD%BB%E8%A7%A6%E4%B8%BA%E7%82%B9%E5%87%BB/</url>
+    <content><![CDATA[<h3 id="起因"><a href="#起因" class="headerlink" title="起因"></a>起因</h3><p>在 Linux 下使用触摸板的时候总是需要重按下去才是点击操作，个人更喜欢轻触点击的中操作方式，网上搜索基本都是依靠 GDM/KDM 这种桌面管理其实现的修改方式，自己使用的 i3-wm 的平铺式桌面，基本上就只有修改对应的配置文件或者命令行方式了，就研究了一番，把对应的命令操作记录下来，在 Archlinux 上我用到的就 xinput 这一条命令了。</p>
+<h3 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h3><p>首先查看设备列表</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput           </span><br><span class="line">⎡ Virtual core pointer                    	id=2	[master pointer  (3)]</span><br><span class="line">⎜   ↳ Virtual core XTEST pointer              	id=4	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳     Mouse                               	id=16	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳     Touchpad                            	id=17	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ SONiX USB DEVICE Consumer Control       	id=11	[slave  pointer  (2)]</span><br><span class="line">⎜   ↳ USB Optical Mouse                       	id=21	[slave  pointer  (2)]</span><br><span class="line">⎣ Virtual core keyboard                   	id=3	[master keyboard (2)]</span><br><span class="line">    ↳ Virtual core XTEST keyboard             	id=5	[slave  keyboard (3)]</span><br><span class="line">    ↳ Power Button                            	id=6	[slave  keyboard (3)]</span><br><span class="line">    ↳ Video Bus                               	id=7	[slave  keyboard (3)]</span><br><span class="line">    ↳ Video Bus                               	id=8	[slave  keyboard (3)]</span><br><span class="line">    ↳ Power Button                            	id=9	[slave  keyboard (3)]</span><br><span class="line">    ↳ Sleep Button                            	id=10	[slave  keyboard (3)]</span><br><span class="line">    ↳ HD WebCam: HD WebCam                    	id=18	[slave  keyboard (3)]</span><br><span class="line">    ↳ AT Translated Set 2 keyboard            	id=19	[slave  keyboard (3)]</span><br><span class="line">    ↳ Acer WMI hotkeys                        	id=20	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE Consumer Control       	id=12	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE Keyboard               	id=13	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE System Control         	id=14	[slave  keyboard (3)]</span><br><span class="line">    ↳ SONiX USB DEVICE                        	id=15	[slave  keyboard (3)]</span><br></pre></td></tr></table></figure>
+<p>其中 id=16 的设备则为笔记本上的触摸板模拟鼠标</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput list-props 17</span><br><span class="line">Device <span class="string">'    Touchpad'</span>:</span><br><span class="line">	Device Enabled (169):	1</span><br><span class="line">	Coordinate Transformation Matrix (171):	1.000000, 0.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000, 0.000000, 1.000000</span><br><span class="line">	libinput Tapping Enabled (324):	0</span><br><span class="line">	libinput Tapping Enabled Default (325):	0</span><br><span class="line">	libinput Tapping Drag Enabled (326):	1</span><br><span class="line">	libinput Tapping Drag Enabled Default (327):	1</span><br><span class="line">	libinput Tapping Drag Lock Enabled (328):	0</span><br><span class="line">	libinput Tapping Drag Lock Enabled Default (329):	0</span><br><span class="line">	libinput Tapping Button Mapping Enabled (330):	1, 0</span><br><span class="line">	libinput Tapping Button Mapping Default (331):	1, 0</span><br><span class="line">	libinput Natural Scrolling Enabled (304):	0</span><br><span class="line">	libinput Natural Scrolling Enabled Default (305):	0</span><br><span class="line">	libinput Disable While Typing Enabled (332):	1</span><br><span class="line">	libinput Disable While Typing Enabled Default (333):	1</span><br><span class="line">	libinput Scroll Methods Available (308):	1, 1, 0</span><br><span class="line">	libinput Scroll Method Enabled (309):	1, 0, 0</span><br><span class="line">	libinput Scroll Method Enabled Default (310):	1, 0, 0</span><br><span class="line">	libinput Click Methods Available (334):	1, 1</span><br><span class="line">	libinput Click Method Enabled (335):	1, 0</span><br><span class="line">	libinput Click Method Enabled Default (336):	1, 0</span><br><span class="line">	libinput Middle Emulation Enabled (315):	0</span><br><span class="line">	libinput Middle Emulation Enabled Default (316):	0</span><br><span class="line">	libinput Accel Speed (317):	0.000000</span><br><span class="line">	libinput Accel Speed Default (318):	0.000000</span><br><span class="line">	libinput Left Handed Enabled (322):	0</span><br><span class="line">	libinput Left Handed Enabled Default (323):	0</span><br><span class="line">	libinput Send Events Modes Available (289):	1, 1</span><br><span class="line">	libinput Send Events Mode Enabled (290):	0, 0</span><br><span class="line">	libinput Send Events Mode Enabled Default (291):	0, 0</span><br><span class="line">	Device Node (292):	<span class="string">"/dev/input/event8"</span></span><br><span class="line">	Device Product ID (293):	1739, 10608</span><br><span class="line">	libinput Drag Lock Buttons (306):	&lt;no items&gt;</span><br><span class="line">	libinput Horizontal Scroll Enabled (307):	1</span><br></pre></td></tr></table></figure>
+<p>其中属性 libinput Tapping Enabled (324) 和 325 则是轻触点击，当前值均为0，被禁用，将对应值设置为1即可启用轻触点击。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput <span class="built_in">set</span>-prop 17 324 1</span><br></pre></td></tr></table></figure>
+<p>device id 会在重启后变更，因此可以使用对应字符串获取对应 device id，然后再获取到对应的属性，将其开启：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deviceid=`xinput | grep <span class="string">"Touchpad"</span> | awk -F<span class="string">" "</span> &#123;<span class="string">'print $4'</span>&#125; | awk -F<span class="string">"="</span> &#123;<span class="string">'print $2'</span>&#125;`</span><br></pre></td></tr></table></figure>
+<p>获取到 device id。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">propid=`xinput list-props <span class="variable">$&#123;deviceid&#125;</span> | grep <span class="string">"libinput Tapping Enabled ("</span> | awk -F<span class="string">" "</span> &#123;<span class="string">'print $4'</span>&#125;</span><br><span class="line">propid=<span class="variable">$&#123;propid:1:3&#125;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$propid</span></span><br><span class="line">324</span><br></pre></td></tr></table></figure>
+<p>再获取到属性 id。</p>
+<p>接着就可以直接对 device id 和其对应的属性 id 设置值。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xinput <span class="built_in">set</span>-prop <span class="variable">$&#123;deviceid&#125;</span> <span class="variable">$&#123;propid&#125;</span> 1</span><br></pre></td></tr></table></figure>
+<p>然后把这些组成 shell 脚本，再添加开机启动任务就可以生效了。</p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>桌面无线进化 连接蓝牙鼠标和键盘</title>
+    <url>/%E6%A1%8C%E9%9D%A2%E6%97%A0%E7%BA%BF%E8%BF%9B%E5%8C%96-%E8%BF%9E%E6%8E%A5%E8%93%9D%E7%89%99%E9%BC%A0%E6%A0%87%E5%92%8C%E9%94%AE%E7%9B%98/</url>
+    <content><![CDATA[<h4 id="鼠标键盘"><a href="#鼠标键盘" class="headerlink" title="鼠标键盘"></a>鼠标键盘</h4><p>键盘：RK 61 Cherry 茶轴 黑色</p>
+<p>鼠标：达尔优 LM108 垂直人体工学鼠标</p>
+<p>软件包： bluetoorhctl</p>
+<h4 id="连接鼠标"><a href="#连接鼠标" class="headerlink" title="连接鼠标"></a>连接鼠标</h4><p>打开鼠标开关</p>
+<p>达尔优 LM108 底面左上角有一个黑色按钮，为蓝牙配对按钮</p>
+<p>长按进入蓝牙配对模式</p>
+<p>电脑上使用 bluetoothctl 进行蓝牙管理</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">Agent registered</span><br><span class="line">[CHG] Controller 60:57:18:1C:C1:8F Pairable: yes</span><br><span class="line"><span class="meta">[bluetooth]#</span><span class="bash"> scan on</span></span><br><span class="line">Discovery started</span><br></pre></td></tr></table></figure>
+<p>当扫描到对应蓝牙设备的 mac 时，使用</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">pair &lt;mac-of-mouse&gt;</span><br></pre></td></tr></table></figure>
+<p>进行配对连接</p>
+<p>此时会弹出提示框输入 yes 以确认配对设备</p>
+<p>配对之后输入 connect <mac-of-moouse> 连接鼠标</mac-of-moouse></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">connect &lt;mac-of-mouse&gt;</span><br></pre></td></tr></table></figure>
+<p>至此鼠标连接成功。</p>
+<p>接下来以蓝牙方式连接键盘</p>
+<h4 id="连接键盘"><a href="#连接键盘" class="headerlink" title="连接键盘"></a>连接键盘</h4><p>去 RK 官网查看 RK 61 双模键盘使用方式</p>
+<p>我这里为第一版， Tab 和 P 键上都有镭射标记</p>
+<p>Fn + Tab 为蓝牙有线连接方式切换，出厂默认为蓝牙连接方式</p>
+<p>Fn + P 进入蓝牙配对模式</p>
+<p>首先打开键盘背部开关开启键盘</p>
+<p>出厂默认为蓝牙连接方式，则按下 Fn + P 进入蓝牙配对模式，此时 P 键连续闪烁</p>
+<p>在电脑上进入 bluetoothctl 进行蓝牙配对</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">scan on</span><br><span class="line"><span class="meta">#</span><span class="bash"> 扫描到蓝牙键盘后使用 pair &lt;mac-of-keyboard&gt; 进行配对</span></span><br><span class="line">pair &lt;mac-of-keyboard&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 输入 yes 以确认配对</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 配对成功之后使用 connect &lt;mac-of-keyboard&gt; 进行连接</span></span><br><span class="line">connect &lt;mac-of-keyboard&gt;</span><br></pre></td></tr></table></figure>
+<p>至此键盘和鼠标的连接完成</p>
+<p>接下来进行鼠标延迟的优化</p>
+<h4 id="鼠标延迟优化"><a href="#鼠标延迟优化" class="headerlink" title="鼠标延迟优化"></a>鼠标延迟优化</h4><p>修改鼠标轮询率</p>
+<p>查看蓝牙鼠标 mac 地址</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">bluetoothctl</span><br><span class="line">Agent registered</span><br><span class="line">[CHG] Controller 60:57:18:1C:C1:8F Pairable: yes</span><br><span class="line">[RK-Bluetooth keyboard]# devices</span><br><span class="line">Device DC:2C:26:D0:08:02 RK-Bluetooth keyboard</span><br><span class="line">Device FA:0C:38:6A:EC:CE LM108 Bluetooth</span><br></pre></td></tr></table></figure>
+<p>查看系统蓝牙适配器 mac 地址</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[RK-Bluetooth keyboard]# list</span><br><span class="line">Controller 60:57:18:1C:C1:8F BiGOranGe [default]</span><br></pre></td></tr></table></figure>
+<p>var 下目录需要超级管理员权限才可以查看修改</p>
+<p>在超级管理员状态下修改 <code>/var/lib/bluetooth/&lt;mac-of-adaptor&gt;/&lt;mac-of-mouse&gt;/info</code>添加/修改以下字段</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ConnectionParameters]</span><br><span class="line">MinInterval=6</span><br><span class="line">MaxInterval=9</span><br><span class="line">Latency=44</span><br><span class="line">Timeout=216</span><br></pre></td></tr></table></figure>
+<p>修改之前的值</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[ConnectionParameters]</span><br><span class="line">MinInterval=6</span><br><span class="line">MaxInterval=9</span><br><span class="line">Latency=100</span><br><span class="line">Timeout=600</span><br></pre></td></tr></table></figure>
+<p>可以自己根据自己的需求调节这两个值进行优化，以达到自己满意的状态</p>
+<h4 id="设置蓝牙自动连接"><a href="#设置蓝牙自动连接" class="headerlink" title="设置蓝牙自动连接"></a>设置蓝牙自动连接</h4><p>修改/添加 <code>/etc/bluetooth/main.conf</code>的<code>[Policy]</code>下添加<code>AutoEnable=true</code>将蓝牙设备设置为开机自动连接</p>
+]]></content>
+      <categories>
+        <category>Arch Linux</category>
+        <category>peripherals</category>
+      </categories>
+      <tags>
+        <tag>Arch Linux</tag>
+        <tag>bluetooth</tag>
+        <tag>keyboard</tag>
+        <tag>mouse</tag>
       </tags>
   </entry>
 </search>

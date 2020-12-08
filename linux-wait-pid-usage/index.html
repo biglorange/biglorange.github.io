@@ -108,16 +108,18 @@
 
 
 
-  <meta name="description" content="I can do all things.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="BigOrange Blog">
-<meta property="og:url" content="https://biglorange.github.io/page/2/index.html">
+  <meta name="description" content="Linux 下使用 vfork 创建子进程，waitpid 获取子进程返回状态">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 下 wait_pid 和 vfork 使用">
+<meta property="og:url" content="https://biglorange.github.io/linux-wait-pid-usage/index.html">
 <meta property="og:site_name" content="BigOrange Blog">
-<meta property="og:description" content="I can do all things.">
+<meta property="og:description" content="Linux 下使用 vfork 创建子进程，waitpid 获取子进程返回状态">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-12-08T14:47:39.669Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BigOrange Blog">
-<meta name="twitter:description" content="I can do all things.">
+<meta name="twitter:title" content="Linux 下 wait_pid 和 vfork 使用">
+<meta name="twitter:description" content="Linux 下使用 vfork 创建子进程，waitpid 获取子进程返回状态">
 
 
 
@@ -126,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="https://biglorange.github.io/page/2/">
+  <link rel="canonical" href="https://biglorange.github.io/linux-wait-pid-usage/">
 
 
 
@@ -136,7 +138,7 @@
   };
 </script>
 
-  <title>BigOrange Blog</title>
+  <title>Linux 下 wait_pid 和 vfork 使用 | BigOrange Blog</title>
   
 
 
@@ -183,8 +185,7 @@
   
   
 
-  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container  
-  page-home">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container  page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -293,9 +294,9 @@
           
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -310,7 +311,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://biglorange.github.io/Fail2ban/">
+    <link itemprop="mainEntityOfPage" href="https://biglorange.github.io/linux-wait-pid-usage/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="BigOrange">
@@ -327,11 +328,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/Fail2ban/" itemprop="url">
-                  Fail2ban 在服务器上的配置
-                </a>
+          <h1 class="post-title" itemprop="name headline">Linux 下 wait_pid 和 vfork 使用
               
             
           </h1>
@@ -356,24 +353,12 @@
                 
               
 
-              <time title="Created: 2018-11-10 22:18:34" itemprop="dateCreated datePublished" datetime="2018-11-10T22:18:34+08:00">2018-11-10</time>
+              <time title="Created: 2020-12-08 21:14:48 / Modified: 22:47:39" itemprop="dateCreated datePublished" datetime="2020-12-08T21:14:48+08:00">2020-12-08</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-08-20 21:24:29" itemprop="dateModified" datetime="2020-08-20T21:24:29+08:00">2020-08-20</time>
               
             
           </span>
@@ -390,7 +375,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/fail2ban/" itemprop="url" rel="index"><span itemprop="name">fail2ban</span></a></span>
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
 
                 
                 
@@ -410,6 +395,8 @@
           
 
           
+              <div class="post-description">Linux 下使用 vfork 创建子进程，waitpid 获取子进程返回状态</div>
+          
 
         </div>
       </header>
@@ -424,18 +411,24 @@
       
 
       
-        
-          Fail2ban 安装及配置
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/Fail2ban/">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
+        <h2 id="调用-vfork-创建子进程"><a href="#调用-vfork-创建子进程" class="headerlink" title="调用 vfork 创建子进程"></a>调用 vfork 创建子进程</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pid_t</span> pid = vfork();</span><br><span class="line"><span class="keyword">if</span> (pid &lt; <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    perror(<span class="string">"vfork failed."</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"this is parent process."</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (pid &gt; <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"this is child process."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>vfork 用于创建一个新进程，和 fork 不同， vfork 不将父进程的地址空间完全复制到子进程中，不会复制页表<br>vfork 执行一次会返回两个返回值</p>
+<ol>
+<li>在子进程中返回0</li>
+<li>在父进程中返回子进程 pid_t<br>执行失败返回 -1</li>
+</ol>
+<h2 id="调用-waitpid-等待子进程结束"><a href="#调用-waitpid-等待子进程结束" class="headerlink" title="调用 waitpid 等待子进程结束"></a>调用 waitpid 等待子进程结束</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">waitpid(pid, &amp;status, <span class="number">0</span>);</span><br><span class="line"><span class="keyword">if</span> (WIFEXITED(status))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"child process exit normally, return code is %d."</span>, WEXITSTATUS(status));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> (WIFSIGNALED(status))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"child process exit abnormally, return code is %d."</span>, WTERMSIG(status));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>waitpid() 会暂时停止目前程序的执行，知道有信号来到或子进程结束<br>其中 pid 为子进程 pid, status 为要返回的子进程的结束状态<br>有如下几个宏可以用来判别结束情况</p>
+<ul>
+<li><code>WIFEXITED(status)</code> 如果子进程正常结束则为非 0 值。</li>
+<li><code>WEXITSTATUS(status)</code> 取得子进程 exit()返回的结束代码,一般会先用 WIFEXITED 来判断是否正常结束才能使用此宏。</li>
+<li><code>WIFSIGNALED(status)</code> 如果子进程是因为信号而结束则此宏值为真</li>
+<li><code>WTERMSIG(status</code>) 取得子进程因信号而中止的信号代码,一般会先用 WIFSIGNALED 来判断后才使用此宏。</li>
+<li><code>WIFSTOPPED(status)</code> 如果子进程处于暂停执行情况则此宏值为真。一般只有使用 WUNTRACED 时才会有此情况。</li>
+<li><code>WSTOPSIG(status)</code> 取得引发子进程暂停的信号代码,一般会先用 WIFSTOPPED 来判断后才使用此宏。</li>
+<li>如果执行成功则返回子进程识别码(PID) ,如果有错误发生则返回返回值-1。失败原因存于 errno 中。</li>
+</ul>
+
       
     </div>
 
@@ -453,197 +446,36 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://biglorange.github.io/use_nvidia_prime_to_control_nvidia_card/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="BigOrange">
-      <meta itemprop="description" content="I can do all things.">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BigOrange Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/use_nvidia_prime_to_control_nvidia_card/" itemprop="url">
-                  显卡驱动作死，使用 nvidia-prime 管理显卡
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2018-10-29 18:14:15" itemprop="dateCreated datePublished" datetime="2018-10-29T18:14:15+08:00">2018-10-29</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2020-08-20 21:23:01" itemprop="dateModified" datetime="2020-08-20T21:23:01+08:00">2020-08-20</time>
-              
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/nVidia/" itemprop="url" rel="index"><span itemprop="name">nVidia</span></a></span>
-
-                
-                
-                  , 
-                
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/nVidia/Arch-Linux/" itemprop="url" rel="index"><span itemprop="name">Arch Linux</span></a></span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
           
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          emmm，本来 bumblebee 使用的挺好的，但是 optirun 游戏性能很捉急，所以冲动之下换成 nvidia-prime 驱动显卡。
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/use_nvidia_prime_to_control_nvidia_card/">
-                Read more &raquo;
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/install-postgresql94-archlinux/" rel="next" title="archlinux 安装并初始化配置 postgresql 9.4.26">
+                <i class="fa fa-chevron-left"></i> archlinux 安装并初始化配置 postgresql 9.4.26
               </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
+            
+          </div>
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -653,18 +485,15 @@
   </article>
 
 
-    
-  </section>
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-  </nav>
-
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -685,8 +514,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -856,6 +694,22 @@
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#调用-vfork-创建子进程"><span class="nav-number">1.</span> <span class="nav-text">调用 vfork 创建子进程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调用-waitpid-等待子进程结束"><span class="nav-number">2.</span> <span class="nav-text">调用 waitpid 等待子进程结束</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
         <div class="back-to-top">
@@ -1000,6 +854,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.5.0"></script>
+
+
 
   
 
@@ -1041,12 +899,6 @@
   
 
   
-  
-    
-      
-    
-      
-    
   
 
   
